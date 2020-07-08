@@ -1,6 +1,6 @@
 import norskfaktura.config as cfg
-from norskfaktura.gui import testWindow
+from norskfaktura.gui import show_main_window
 
 def test():
     print(cfg.load_config()["firma"].getboolean('mva-registrert'))
-    testWindow()
+    show_main_window()

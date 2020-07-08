@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS customers (
     address_one TEXT NOT NULL,
     address_two TEXT,
     postal_code TEXT NOT NULL,
-    org_no TEXT
+    org_no TEXT,
+    tlf TEXT,
+    email TEXT
 );
 
 CREATE TABLE IF NOT EXISTS invoices (
