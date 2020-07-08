@@ -1,2 +1,5 @@
 *.png
 *.pdf
+.vscode/
+dist/
+env/

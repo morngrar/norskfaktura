@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='norskfaktura',
@@ -12,10 +12,14 @@ setup(
     license='MIT',
     entry_points = {
         "console_scripts" : [
-            
+            "fakturatest=norskfaktura.cmd:test",
         ],
     },
-    packages=['norskfaktura'],
+    packages=find_packages(include=['norskfaktura', 'norskfaktura.*']),
     include_package_data=True,
+    install_requires=[
+        "pycairo>=1.19.1",
+        "PyGObject>=3.36.1",
+    ],
     zip_safe=False
 )
