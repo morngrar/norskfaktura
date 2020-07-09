@@ -24,6 +24,7 @@ class InvoiceView(Gtk.Box):
         grid = Gtk.Grid()
         grid.set_row_homogeneous(True)
         self.set_orientation(Gtk.Orientation.VERTICAL)
+        self.set_spacing = 6
         self.pack_end(grid, True, True, 0)
 
 
@@ -43,7 +44,7 @@ class InvoiceView(Gtk.Box):
 
         for label in self.customer_info_labels:
             label.set_xalign(0)
-            address_box.pack_start(label, True, True, 6)
+            address_box.pack_start(label, False, True, 6)
 
         # Delivery info
         delivery_frame = Gtk.Frame.new("Leveranseinfo")
@@ -88,6 +89,15 @@ class InvoiceView(Gtk.Box):
         delivery_box.pack_start(delivery_data_box, True, True, 0)
         delivery_frame.add(delivery_box)
         customer_box.pack_start(delivery_frame, True, True, 0)
+
+        # Box for message
+        message_box = Gtk.Box()
+        message_box.set_margin_top(12)
+        self.pack_start(message_box, True, True, 0)
+        message_label = Gtk.Label("Melding:")
+        self.message_entry = Gtk.Entry()
+        message_box.pack_start(message_label, False, False, 5)
+        message_box.pack_start(self.message_entry, True, True, 0)
 
 
         # creating the treeview
