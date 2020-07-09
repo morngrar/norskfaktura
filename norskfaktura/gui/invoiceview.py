@@ -23,15 +23,71 @@ class InvoiceView(Gtk.Box):
         # Setting up the grid in which the elements are to be positionned
         grid = Gtk.Grid()
         grid.set_row_homogeneous(True)
-        self.add(grid)
+        self.set_orientation(Gtk.Orientation.VERTICAL)
+        self.pack_end(grid, True, True, 0)
 
 
         # customer info
-        self.customer_name = Gtk.Label("Customer name")
-        self.customer_org = Gtk.Label("Org. no: xxx xxx xxx")
-        self.customer_address1 = Gtk.Label("Blåklokkevegen 26")
-        self.customer_address2 = Gtk.Label("")
-        self.customer_postal = Gtk.Label("2322 RIDABU")
+        customer_box = Gtk.Box()
+        address_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        customer_box.pack_start(address_box, True, True, 0)
+        self.pack_start(customer_box, True, True, 0)
+
+        self.customer_info_labels = [
+            Gtk.Label("Customer name"),
+            Gtk.Label("Org. no: xxx xxx xxx"),
+            Gtk.Label("Blåklokkevegen 26"),
+            Gtk.Label(""),
+            Gtk.Label("2322 RIDABU"),
+        ]
+
+        for label in self.customer_info_labels:
+            label.set_xalign(0)
+            address_box.pack_start(label, True, True, 6)
+
+        # Delivery info
+        delivery_frame = Gtk.Frame.new("Leveranseinfo")
+        
+        delivery_data_box = Gtk.Box(spacing=6)
+        delivery_entry_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        delivery_data_box.pack_start(delivery_entry_box, True, True, 0)
+
+        delivery_date_label = Gtk.Label("Leveringsdato")
+        delivery_date_label.set_xalign(0)
+        delivery_entry_box.pack_start(
+            delivery_date_label,
+            True, True, 0
+        )
+        self.delivery_date_entry = Gtk.Entry()
+        self.delivery_date_entry.set_width_chars(10)
+        delivery_entry_box.pack_start(self.delivery_date_entry, True, True, 0)
+
+        delivery_address_label = Gtk.Label("Addresse")
+        delivery_address_label.set_xalign(0)
+        delivery_entry_box.pack_start(
+            delivery_address_label,
+            True, True, 0
+        )
+
+        self.delivery_address_fields = [
+            Gtk.Entry() for i in range(3)
+        ]
+
+        for entry in self.delivery_address_fields:
+            delivery_entry_box.pack_start(entry, True, True, 0)
+
+        calendar = Gtk.Calendar()
+        calendar.connect("day-selected", self.on_date_selection)
+        delivery_data_box.pack_start(calendar, True, True, 0)
+        
+
+        delivery_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        delivery_box.set_margin_left(6)
+        delivery_box.set_margin_right(6)
+        delivery_box.set_margin_bottom(6)
+        delivery_box.pack_start(delivery_data_box, True, True, 0)
+        delivery_frame.add(delivery_box)
+        customer_box.pack_start(delivery_frame, True, True, 0)
 
 
         # creating the treeview
@@ -50,6 +106,7 @@ class InvoiceView(Gtk.Box):
 
         self.scrollable_treelist.add(self.treeview)
         self.scrollable_treelist.set_margin_bottom(6)
+        self.scrollable_treelist.set_margin_top(12)
 
         # Summary below treeview
         total_vat_label = Gtk.Label("Herav Mva:")
@@ -109,10 +166,45 @@ class InvoiceView(Gtk.Box):
         grid.attach(self.vat_entry, 6, 12, 1, 1)
 
         # Buttons
+        self.remove_button = Gtk.Button("Fjern valgt rad")
+        self.remove_button.set_margin_left(12)
+        #self.remove_button.connect()
+        grid.attach(self.remove_button, 8, 11, 1, 1)
+
         self.add_button = Gtk.Button("Legg til")
         self.add_button.set_margin_left(12)
         self.add_button.connect("clicked", self.on_add_clicked)
         grid.attach(self.add_button, 8, 12, 1, 1)
+
+
+        # Button box besides invoice lines
+        button_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=6,
+        )
+        button_box.set_margin_left(6)
+        button_box.set_margin_top(12)
+        button_box.set_margin_bottom(6)
+        grid.attach(button_box, 8, 0, 1, 9)
+
+        post_button = Gtk.Button("Postér")
+
+        pay_button = Gtk.Button("Betal")
+        pay_button.set_sensitive(False)
+
+        pdf_button = Gtk.Button("Lag PDF")
+        pdf_button.set_sensitive(False)
+        
+        creditnote_button = Gtk.Button("Lag kreditnota")
+        creditnote_button.set_sensitive(False)
+
+        for b in [
+            post_button,
+            pay_button,
+            pdf_button,
+            creditnote_button,
+        ]:
+            button_box.pack_start(b, True, True, 0)
 
 
     def _blank_item_input(self):
@@ -124,6 +216,14 @@ class InvoiceView(Gtk.Box):
             self.vat_entry,
         ]:
             w.set_text("")
+
+    def on_date_selection(self, calendar):
+        date = calendar.get_date()
+        day = pad_zeroes(date.day, 2)
+        month = pad_zeroes(date.month, 2)
+        self.delivery_date_entry.set_text(
+            f"{day}.{month}.{date.year}"
+        )
 
     def on_add_clicked(self, widget):
         self.invoice_item_store.append(
@@ -138,3 +238,11 @@ class InvoiceView(Gtk.Box):
         )
         print(self.customer)
         self._blank_item_input()
+
+# For file naming and date formatting:
+def pad_zeroes(n, padding): 
+    """Returns string from number n, padded to lengt with leading zeroes"""
+    if n - 10**(padding-1) >= 0: 
+        return str(n) 
+    else: 
+        return f"0{pad_zeroes(n, padding-1)}" 

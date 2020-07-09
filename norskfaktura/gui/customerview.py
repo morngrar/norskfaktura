@@ -11,6 +11,10 @@ class CustomerView(Gtk.Box):
         self.window = window
         self.customer = None
 
+
+        self.set_margin_left(50)
+        self.set_margin_top(150)
+
         grid = Gtk.Grid()
         self.add(grid)
 
@@ -32,8 +36,10 @@ class CustomerView(Gtk.Box):
         org_label.set_justify(Gtk.Justification.RIGHT)
         org_label.set_margin_left(horizontal_margin)
         org_label.set_margin_right(5)
+        org_label.set_margin_top(6)
         grid.attach(org_label, 0, 1, 1, 1)
         self.org_entry = Gtk.Entry()
+        self.org_entry.set_margin_top(6)
         self.org_entry.set_width_chars(25)
         grid.attach(self.org_entry, 1, 1, 4, 1)
 
@@ -90,7 +96,6 @@ class CustomerView(Gtk.Box):
         grid.attach(self.create_invoice_button, 5, 0, 2, 1)
 
     def on_save_clicked(self, widget):
-        #self.customer.id = 1 # save customer data
         self.customer = "Yo customer san"
 
         # And on confirmation, enable invoice button
