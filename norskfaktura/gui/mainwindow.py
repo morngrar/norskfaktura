@@ -29,6 +29,7 @@ class MainWindow(Gtk.Window):
 
         self.invoice_view = InvoiceView(self)
         self.stack.add_named(self.invoice_view, "invoice view")
+        self.invoice_view.connect("home-clicked", self.on_home_clicked)
 
 
         vbox.pack_start(self.stack, True, True, 0)

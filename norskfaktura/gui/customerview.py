@@ -96,7 +96,17 @@ class CustomerView(Gtk.Box):
         grid.attach(self.create_invoice_button, 5, 0, 2, 1)
 
     def on_save_clicked(self, widget):
-        self.customer = "Yo customer san"
+        if self.customer == None:
+            self.customer = Customer()
+
+        self.customer.name = self.name_entry.get_text()
+        self.customer.org_no = self.org_entry.get_text()
+        self.customer.address_lines = [
+            self.address_entry_one.get_text(),
+            self.address_entry_two.get_text(),
+            self.postal_entry.get_text()
+        ]
+        self.customer.save()
 
         # And on confirmation, enable invoice button
         self.create_invoice_button.set_sensitive(True)

@@ -12,19 +12,16 @@ CREATE TABLE IF NOT EXISTS customers (
 CREATE TABLE IF NOT EXISTS invoices (
     id INTEGER PRIMARY KEY,
     customer INTEGER, -- FK
-    description TEXT,
-    date INTEGER NOT NULL,
-    due INTEGER NOT NULL,
+    message TEXT,
+    date TEXT NOT NULL, -- ISO format
+    due TEXT NOT NULL, -- ISO format
     delivery_date TEXT,
     delivery_address_one TEXT,
     delivery_address_two TEXT,
     delivery_postal_code TEXT,
 
-    -- boolean flags 1/0 (sqlite has no 'boolean')
-    posted INTEGER NOT NULL,
-    paid INTEGER NOT NULL,
-    cancelled INTEGER NOT NULL,
-    credit_note INTEGER NOT NULL,
+    -- boolean flags set as bits (bitwise operators as in python/c++)
+    flags INTEGER NOT NULL,
 
     FOREIGN KEY (customer)
         REFERENCES customers (id)

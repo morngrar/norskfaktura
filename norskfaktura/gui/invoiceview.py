@@ -3,6 +3,8 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
+from norskfaktura.gui import signaling
+
 class InvoiceView(Gtk.Box):
     def __init__(self, window, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -118,6 +120,16 @@ class InvoiceView(Gtk.Box):
         self.scrollable_treelist.set_margin_bottom(6)
         self.scrollable_treelist.set_margin_top(12)
 
+        # Days until due fields
+        due_label = Gtk.Label("Antall dager til forfall:")
+        self.due_days_entry = Gtk.Entry()
+        self.due_days_entry.set_text("14")
+        self.due_days_entry.set_width_chars(3)
+        due_box = Gtk.Box(spacing=5)
+        due_box.pack_start(due_label, False, True, 0)
+        due_box.pack_start(self.due_days_entry, True, True, 0)
+        grid.attach(due_box, 0, 9, 2, 1)
+
         # Summary below treeview
         total_vat_label = Gtk.Label("Herav Mva:")
         total_vat_label.set_xalign(1)
@@ -208,13 +220,18 @@ class InvoiceView(Gtk.Box):
         creditnote_button = Gtk.Button("Lag kreditnota")
         creditnote_button.set_sensitive(False)
 
+        signaling.new("home-clicked", self) # signal to get back
+        cancel_button = Gtk.Button("Avbryt")
+        cancel_button.connect("clicked", self.on_cancel)
+
         for b in [
             post_button,
             pay_button,
             pdf_button,
             creditnote_button,
+            cancel_button,
         ]:
-            button_box.pack_start(b, True, True, 0)
+            button_box.pack_start(b, False, True, 0)
 
 
     def _blank_item_input(self):
@@ -248,6 +265,9 @@ class InvoiceView(Gtk.Box):
         )
         print(self.customer)
         self._blank_item_input()
+    
+    def on_cancel(self, widget):
+        self.emit("home-clicked", widget)
 
 # For file naming and date formatting:
 def pad_zeroes(n, padding): 
