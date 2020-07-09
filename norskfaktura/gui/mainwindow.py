@@ -2,7 +2,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from norskfaktura.gui import CustomerView, MainView
+from norskfaktura.gui import CustomerView, MainView, InvoiceView
 
 WINDOW_TITLE = "Norsk Faktura"
 
@@ -27,7 +27,12 @@ class MainWindow(Gtk.Window):
         self.customer_view.connect("home-clicked", self.on_home_clicked)
         self.customer_view.connect("new-invoice", self.on_new_invoice)
 
+        self.invoice_view = InvoiceView(self)
+        self.stack.add_named(self.invoice_view, "invoice view")
+
+
         vbox.pack_start(self.stack, True, True, 0)
+
 
     def on_customer_clicked(self, *args):
         self.stack.set_visible_child(self.customer_view)
@@ -38,7 +43,8 @@ class MainWindow(Gtk.Window):
 
     def on_new_invoice(self, *args):
         self.set_title("Ny faktura")
-        pass
+        self.invoice_view.customer = args[-1]
+        self.stack.set_visible_child(self.invoice_view)
 
 def show_main_window():
     win = MainWindow()

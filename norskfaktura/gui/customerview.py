@@ -8,8 +8,8 @@ from norskfaktura.gui import signaling
 class CustomerView(Gtk.Box):
     def __init__(self, window, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.window = window
+        self.customer = None
 
         grid = Gtk.Grid()
         self.add(grid)
@@ -91,6 +91,7 @@ class CustomerView(Gtk.Box):
 
     def on_save_clicked(self, widget):
         #self.customer.id = 1 # save customer data
+        self.customer = "Yo customer san"
 
         # And on confirmation, enable invoice button
         self.create_invoice_button.set_sensitive(True)
@@ -100,7 +101,7 @@ class CustomerView(Gtk.Box):
         
     
     def on_create_invoice_clicked(self, widget):
-        pass
+        self.emit("new-invoice", self.customer)
 
 
 def testWindow():
