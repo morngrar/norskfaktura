@@ -44,7 +44,8 @@ class MainWindow(Gtk.Window):
 
     def on_new_invoice(self, *args):
         self.set_title("Ny faktura")
-        self.invoice_view.customer = args[-1]
+        self.invoice_view.new_invoice(args[-1])
+
         self.stack.set_visible_child(self.invoice_view)
 
 def show_main_window():

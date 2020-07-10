@@ -18,6 +18,7 @@ class Customer:
         # Currently exists in schema, but not added to gui:
         self.tlf = None
         self.email = None
+        self.discount = None
 
     def save(self):
         conn = sqlite3.connect(common.DBFILE)

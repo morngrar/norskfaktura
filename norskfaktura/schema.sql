@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS customers (
     postal_code TEXT NOT NULL,
     org_no TEXT,
     tlf TEXT,
+    discount INTEGER,
     email TEXT
 );
 
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS invoice_items (
     description TEXT NOT NULL,
     price INTEGER NOT NULL,  -- 'øre' part of integer
     amount INTEGER NOT NULL,
+    discount REAL NOT NULL,  -- percentage factor
     vat REAL NOT NULL, -- percentage factor
     FOREIGN KEY (invoice)
         REFERENCES invoices (id)

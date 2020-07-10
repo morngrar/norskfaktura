@@ -26,6 +26,10 @@ def create_config():
         'første fakturanr' : '1',
     }
 
+    config['faktura'] = {
+        'betalingsfrist i dager' : '14'
+    }
+
     config['miljø'] = {
         'pdf-kommando' : 'evince',
     }

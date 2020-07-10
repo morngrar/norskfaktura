@@ -14,3 +14,24 @@ if not os.path.exists(DBFILE):
     host_dir = os.path.dirname(os.path.abspath(__file__))
     sql_file = os.path.join(host_dir, "schema.sql")
     load_sql_file(sql_file, DBFILE)
+
+# For file naming and date formatting:
+def pad_zeroes(n, padding): 
+    """Returns string from number n, padded to lengt with leading zeroes"""
+    if n == 0 and padding-1 == 0:
+        return "0"
+    elif n - 10**(padding-1) >= 0: 
+        return str(n) 
+    else: 
+        return f"0{pad_zeroes(n, padding-1)}" 
+
+
+def str_to_money(string):
+    """Takes a number, with or without a decimal point, and converts it to money"""
+    string = string.replace(",",".")
+    return int(float(string)*100)
+
+
+def money_to_str(integer):
+    """Takes an integer containing full money value with cents and returns string"""
+    return f"{int(integer/100)},{pad_zeroes(integer%100, 2)}"

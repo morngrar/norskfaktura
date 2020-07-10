@@ -4,6 +4,9 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from norskfaktura.gui import signaling
+from norskfaktura.invoice import Invoice
+from norskfaktura.config import load_config
+from norskfaktura.common import pad_zeroes
 
 class InvoiceView(Gtk.Box):
     def __init__(self, window, *args, **kwargs):
@@ -15,7 +18,7 @@ class InvoiceView(Gtk.Box):
         # Data members
         #
 
-        self.invoice_item_store = Gtk.ListStore(str, str, str, str, str, str)
+        self.invoice_item_store = Gtk.ListStore(int, str, str, str, str, str, str)
 
 
         #
@@ -36,15 +39,22 @@ class InvoiceView(Gtk.Box):
         customer_box.pack_start(address_box, True, True, 0)
         self.pack_start(customer_box, True, True, 0)
 
-        self.customer_info_labels = [
-            Gtk.Label("Customer name"),
-            Gtk.Label("Org. no: xxx xxx xxx"),
-            Gtk.Label("Blåklokkevegen 26"),
-            Gtk.Label(""),
-            Gtk.Label("2322 RIDABU"),
-        ]
+        self.customer_info_labels = {
+            "name" : Gtk.Label("Customer name"),
+            "org" : Gtk.Label("Org. no: xxx xxx xxx"),
+            "addr" : [
+                Gtk.Label("Blåklokkevegen 26"),
+                Gtk.Label(""),
+                Gtk.Label("2322 RIDABU"),
+            ]
+        }
 
-        for label in self.customer_info_labels:
+        #packing first two fields
+        for label in list(self.customer_info_labels.values())[:-1]:
+            label.set_xalign(0)
+            address_box.pack_start(label, False, True, 6)
+
+        for label in self.customer_info_labels["addr"]:
             label.set_xalign(0)
             address_box.pack_start(label, False, True, 6)
 
@@ -79,9 +89,9 @@ class InvoiceView(Gtk.Box):
         for entry in self.delivery_address_fields:
             delivery_entry_box.pack_start(entry, True, True, 0)
 
-        calendar = Gtk.Calendar()
-        calendar.connect("day-selected", self.on_date_selection)
-        delivery_data_box.pack_start(calendar, True, True, 0)
+        self.calendar = Gtk.Calendar()
+        self.calendar.connect("day-selected", self.on_date_selection)
+        delivery_data_box.pack_start(self.calendar, True, True, 0)
         
 
         delivery_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -105,7 +115,7 @@ class InvoiceView(Gtk.Box):
         # creating the treeview
         self.treeview = Gtk.TreeView.new_with_model(self.invoice_item_store)
         for i, column_title in enumerate(
-            ["Beskrivelse", "Pris", "Antall", "Rabatt %", "Mva %", "Beløp"]
+            ["#", "Beskrivelse", "Pris", "Antall", "Rabatt %", "Mva %", "Beløp"]
         ):
             renderer = Gtk.CellRendererText()
             column = Gtk.TreeViewColumn(column_title, renderer, text=i)
@@ -123,7 +133,6 @@ class InvoiceView(Gtk.Box):
         # Days until due fields
         due_label = Gtk.Label("Antall dager til forfall:")
         self.due_days_entry = Gtk.Entry()
-        self.due_days_entry.set_text("14")
         self.due_days_entry.set_width_chars(3)
         due_box = Gtk.Box(spacing=5)
         due_box.pack_start(due_label, False, True, 0)
@@ -190,7 +199,7 @@ class InvoiceView(Gtk.Box):
         # Buttons
         self.remove_button = Gtk.Button("Fjern valgt rad")
         self.remove_button.set_margin_left(12)
-        #self.remove_button.connect()
+        self.remove_button.connect("clicked", self.on_remove_row)
         grid.attach(self.remove_button, 8, 11, 1, 1)
 
         self.add_button = Gtk.Button("Legg til")
@@ -209,7 +218,8 @@ class InvoiceView(Gtk.Box):
         button_box.set_margin_bottom(6)
         grid.attach(button_box, 8, 0, 1, 9)
 
-        post_button = Gtk.Button("Postér")
+        self.post_button = Gtk.Button("Postér")
+        self.post_button.connect("clicked", self.on_post_clicked)
 
         pay_button = Gtk.Button("Betal")
         pay_button.set_sensitive(False)
@@ -225,7 +235,7 @@ class InvoiceView(Gtk.Box):
         cancel_button.connect("clicked", self.on_cancel)
 
         for b in [
-            post_button,
+            self.post_button,
             pay_button,
             pdf_button,
             creditnote_button,
@@ -239,10 +249,15 @@ class InvoiceView(Gtk.Box):
             self.description_entry,
             self.price_entry,
             self.amount_entry,
-            self.discount_entry,
-            self.vat_entry,
         ]:
             w.set_text("")
+
+        self.discount_entry.set_text("0")  # when discounts are added, take it from customer
+        config = load_config()
+        if config["firma"].getboolean("mva-registrert"):
+            self.vat_entry.set_text("25")
+        else:
+            self.vat_entry.set_text("0")
 
     def on_date_selection(self, calendar):
         date = calendar.get_date()
@@ -253,26 +268,64 @@ class InvoiceView(Gtk.Box):
         )
 
     def on_add_clicked(self, widget):
-        self.invoice_item_store.append(
+        row = self.invoice.add_row(
             [
                 self.description_entry.get_text(),
-                "asd",
-                "asd",
-                "asd",
-                "asd",
-                "asd",
+                self.price_entry.get_text(),
+                self.amount_entry.get_text(),
+                self.discount_entry.get_text(),
+                self.vat_entry.get_text()
             ]
         )
-        print(self.customer)
+        self.invoice_item_store.append(row)
+
+        vat, total = self.invoice.get_totals()
+        self.total_vat_value.set_text(vat)
+        self.total_value.set_markup(f"<b>{total}</b>")
         self._blank_item_input()
+
+    def on_remove_row(self, widget):
+        selection = self.treeview.get_selection()
+        model,list_iter = selection.get_selected ()
+        if list_iter != None:
+            index = model[list_iter][0] - 1
+            self.invoice.remove_row(index)
+        self._refresh_rows()
+    
+    def _refresh_rows(self):
+        self.invoice_item_store.clear()
+        for row in self.invoice.get_gui_rows():
+            self.invoice_item_store.append(row)
+
+    def on_post_clicked(self, widget):
+        self.invoice.message = self.message_entry.get_text()
+        self.invoice.set_due_date(int(self.due_days_entry.get_text()))
+        self.invoice.post()
+        self.post_button.set_sensitive(False)
+        
     
     def on_cancel(self, widget):
         self.emit("home-clicked", widget)
 
-# For file naming and date formatting:
-def pad_zeroes(n, padding): 
-    """Returns string from number n, padded to lengt with leading zeroes"""
-    if n - 10**(padding-1) >= 0: 
-        return str(n) 
-    else: 
-        return f"0{pad_zeroes(n, padding-1)}" 
+    def new_invoice(self, customer):
+        """Resets view with fresh invoice for given customer"""
+        self.invoice = Invoice(customer)
+        self._blank_item_input()
+        self.delivery_date_entry.set_text(self.invoice.delivery_date)
+        self.calendar.select_month(self.invoice.date.month, self.invoice.date.year)
+        self.calendar.select_day(self.invoice.date.day)
+        for i in range(3):
+            self.delivery_address_fields[i].set_text(self.invoice.delivery_address[i])
+        self.invoice_item_store.clear()
+        self.customer_info_labels["name"].set_text(customer.name)
+        self.customer_info_labels["org"].set_text(customer.org_no)
+        for i in range(3):
+            self.customer_info_labels["addr"][i].set_text(customer.address_lines[i])
+        self.total_vat_value.set_text("0,00")
+        self.total_value.set_markup("<b>0,00</b>")
+        config = load_config()
+        self.due_days_entry.set_text(config['faktura']['betalingsfrist i dager'])
+
+        
+
+
