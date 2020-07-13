@@ -17,6 +17,7 @@ def create_config():
         'navn' : '',
         'org. nr' : '',
         'tlf' : '',
+        'epost' : '',
         'webside' : '',
         'adresse linje 1' : '',
         'adresse linje 2' : '',
@@ -32,6 +33,8 @@ def create_config():
 
     config['miljø'] = {
         'pdf-kommando' : 'evince',
+        'logofil' : '',
+        'pdfmappe' : ''
     }
 
     ensure_config_dir()

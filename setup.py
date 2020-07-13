@@ -20,6 +20,7 @@ setup(
     install_requires=[
         "pycairo>=1.19.1",
         "PyGObject>=3.36.1",
+        "reportlab>=3.5.44",
     ],
     zip_safe=False
 )

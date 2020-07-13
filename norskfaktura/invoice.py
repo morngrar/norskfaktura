@@ -116,9 +116,6 @@ class Invoice:
         conn = sqlite3.connect(common.DBFILE)
         c = conn.cursor()
 
-
-
-
         if self.id == None:
             # Set id according to config if the table is empty
             c.execute(

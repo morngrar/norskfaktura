@@ -251,7 +251,8 @@ class InvoiceView(Gtk.Box):
         self._set_button_sensitivity()
 
     def on_pdf_clicked(self, widget):
-        pass
+        from norskfaktura.pdf import create_pdf
+        create_pdf(self.invoice)
 
     def on_creditnote_clicked(self, widget):
         """Generates a new invoice which is inverse of the current one"""
@@ -269,7 +270,6 @@ class InvoiceView(Gtk.Box):
 
     def _blank_item_input(self):
         for w in [
-            self.message_entry,
             self.description_entry,
             self.price_entry,
         ]:
@@ -416,6 +416,7 @@ class InvoiceView(Gtk.Box):
         self.due_days_entry.set_text(config['faktura']['betalingsfrist i dager'])
         self._set_button_sensitivity()
         self._write_protect(False)
+        self.message_entry.set_text("")
 
         
 
