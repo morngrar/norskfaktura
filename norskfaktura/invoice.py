@@ -106,6 +106,8 @@ class Invoice:
         self.calculate_sums()
 
     def set_customer_balance(self, balance):
+        if balance == "":
+            balance = 0
         self.customer_balance = common.str_to_money(balance)
         self.calculate_sums()
 
@@ -116,8 +118,9 @@ class Invoice:
         self.save()
     
     def pay(self):
-        self.customer_balance = self.total
-        self.calculate_sums()
+        # if self.customer_balance < self.total:
+        #     self.customer_balance = self.total
+        # self.calculate_sums()
         self.flags |= PAID
         self.save()
 
@@ -230,10 +233,15 @@ class CreditNote(Invoice):
             row[-1] * -1,
         ] for row in invoice.rows]
 
+        invoice.calculate_sums()
+        if invoice.has_flag(PAID):
+            self.customer_balance = invoice.total
+        else:
+            self.customer_balance = invoice.customer_balance
         self.calculate_sums()
 
         self.invoice = invoice # reference in case posting (and cancelling it)
-    
+
     def post(self):
         super().post()
 

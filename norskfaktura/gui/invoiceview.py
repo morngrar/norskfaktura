@@ -268,7 +268,7 @@ class InvoiceView(Gtk.Box):
         self.window.set_title(f"Ny Kreditnota for faktura nr {self.invoice.id}")
         self.invoice = invoice.CreditNote(self.invoice)
         self._set_button_sensitivity()
-        self._write_protect(True)
+        self._write_protect(False)
         self.invoice_item_store.clear()
         for row in self.invoice.get_gui_rows():
             self.invoice_item_store.append(row)
@@ -276,6 +276,7 @@ class InvoiceView(Gtk.Box):
         vat, balance, total = self.invoice.get_totals()
         self.total_vat_value.set_text(vat)
         self.total_value.set_markup(f"<b>{total}</b>")
+        self.customer_balance_entry.set_text(balance)
 
     def _blank_item_input(self):
         for w in [
@@ -359,6 +360,7 @@ class InvoiceView(Gtk.Box):
             self.vat_entry,
             self.add_button,
             self.remove_button,
+            self.customer_balance_entry,
         ]:
             widget.set_sensitive(boolean)
 

@@ -91,7 +91,7 @@ def create_pdf(invoice):
         [customer_org_no, "", "", invoice.delivery_address[1]],
         [message, "", "", invoice.delivery_address[2]],
         ["", "", "Fakturadato:", date],
-        ["", "", "Fakturanr:", invoice.id],
+        ["", "", "Fakturanummer:", invoice.id],
         ["", "", "Betalingsfrist:", due],
     ]
     addresses = Table(data, colWidths=[7*cm, 3*cm, 4*cm, 4*cm])
@@ -132,9 +132,10 @@ def create_pdf(invoice):
     if invoice.has_flag(inv.CREDIT_NOTE):
         invoice.total = invoice.total * -1
     vat, balance, total = invoice.get_totals()
-    invoice.calculate_sums()
     if invoice.has_flag(inv.CREDIT_NOTE):
-        post_note = f"Denne kreditnota OPPHEVER tidligere faktura nr {invoice.credit_ref}"
+        invoice.calculate_sums()
+    if invoice.has_flag(inv.CREDIT_NOTE):
+        post_note = f"Dette dokumentet krediterer tidligere faktura nr {invoice.credit_ref}"
         total_label = "TIL GODE:"
     else:
         post_note = "Vennligst oppgi fakturanummer ved betaling."
@@ -167,6 +168,7 @@ def create_pdf(invoice):
         ('ALIGN',(1,0),(1,-1),'RIGHT'),
         ('ALIGN',(2,0),(4,-4),'CENTER'),
         ('ALIGN',(-2,0),(-1,-1),'RIGHT'),
+        ('ALIGN',(-3,-3),(-3,-1),'LEFT'),
         ('LINEBELOW',(0,0),(-1,0),1,colors.black),
         ('LINEABOVE',(0,-4),(-1,-4),1,colors.black),
     ])
