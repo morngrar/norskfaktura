@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS invoices (
     delivery_address_two TEXT,
     delivery_postal_code TEXT,
 
+    credit_ref INTEGER,  -- reference in case of a credit note, may be NULL
+
     -- boolean flags set as bits (bitwise operators as in python/c++)
     flags INTEGER NOT NULL,
 
@@ -42,7 +44,3 @@ CREATE TABLE IF NOT EXISTS invoice_items (
             ON DELETE CASCADE
 );
 
--- Most recent ID in table:
--- SELECT id
--- FROM table
--- WHERE id = (SELECT MAX(id) FROM table)

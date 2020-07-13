@@ -4,7 +4,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from norskfaktura.gui import signaling
-from norskfaktura.invoice import Invoice
+from norskfaktura import invoice
 from norskfaktura.config import load_config
 from norskfaktura.common import pad_zeroes
 
@@ -221,14 +221,17 @@ class InvoiceView(Gtk.Box):
         self.post_button = Gtk.Button("Postér")
         self.post_button.connect("clicked", self.on_post_clicked)
 
-        pay_button = Gtk.Button("Betal")
-        pay_button.set_sensitive(False)
+        self.pay_button = Gtk.Button("Betal")
+        self.pay_button.set_sensitive(False)
+        self.pay_button.connect("clicked", self.on_pay_clicked)
 
-        pdf_button = Gtk.Button("Lag PDF")
-        pdf_button.set_sensitive(False)
+        self.pdf_button = Gtk.Button("Lag PDF")
+        self.pdf_button.set_sensitive(False)
+        self.pdf_button.connect("clicked", self.on_pdf_clicked)
         
-        creditnote_button = Gtk.Button("Lag kreditnota")
-        creditnote_button.set_sensitive(False)
+        self.creditnote_button = Gtk.Button("Lag kreditnota")
+        self.creditnote_button.set_sensitive(False)
+        self.creditnote_button.connect("clicked", self.on_creditnote_clicked)
 
         signaling.new("home-clicked", self) # signal to get back
         cancel_button = Gtk.Button("Avbryt")
@@ -236,21 +239,42 @@ class InvoiceView(Gtk.Box):
 
         for b in [
             self.post_button,
-            pay_button,
-            pdf_button,
-            creditnote_button,
+            self.pay_button,
+            self.pdf_button,
+            self.creditnote_button,
             cancel_button,
         ]:
             button_box.pack_start(b, False, True, 0)
 
+    def on_pay_clicked(self, widget):
+        self.invoice.pay()
+        self._set_button_sensitivity()
+
+    def on_pdf_clicked(self, widget):
+        pass
+
+    def on_creditnote_clicked(self, widget):
+        """Generates a new invoice which is inverse of the current one"""
+        self.window.set_title(f"Ny Kreditnota for faktura nr {self.invoice.id}")
+        self.invoice = invoice.CreditNote(self.invoice)
+        self._set_button_sensitivity()
+        self._write_protect(True)
+        self.invoice_item_store.clear()
+        for row in self.invoice.get_gui_rows():
+            self.invoice_item_store.append(row)
+
+        vat, total = self.invoice.get_totals()
+        self.total_vat_value.set_text(vat)
+        self.total_value.set_markup(f"<b>{total}</b>")
 
     def _blank_item_input(self):
         for w in [
+            self.message_entry,
             self.description_entry,
             self.price_entry,
-            self.amount_entry,
         ]:
             w.set_text("")
+        self.amount_entry.set_text("1")
 
         self.discount_entry.set_text("0")  # when discounts are added, take it from customer
         config = load_config()
@@ -300,8 +324,73 @@ class InvoiceView(Gtk.Box):
     def on_post_clicked(self, widget):
         self.invoice.message = self.message_entry.get_text()
         self.invoice.set_due_date(int(self.due_days_entry.get_text()))
+        self.invoice.delivery_address = [
+            field.get_text() for field in self.delivery_address_fields
+        ]
         self.invoice.post()
-        self.post_button.set_sensitive(False)
+
+        # set buttons according to state
+        self._set_button_sensitivity()
+
+        self.window.set_title(f"Faktura nr {self.invoice.id}")
+
+    def _write_protect(self, boolean):
+        """Disables or enables editing widgets"""
+        boolean = not boolean
+        for widget in [
+            self.delivery_date_entry,
+            self.calendar,
+            self.description_entry,
+            self.amount_entry,
+            self.discount_entry,
+            self.due_days_entry,
+            self.message_entry,
+            self.price_entry,
+            self.vat_entry,
+            self.add_button,
+            self.remove_button,
+        ]:
+            widget.set_sensitive(boolean)
+
+
+        for entry in self.delivery_address_fields:
+            entry.set_sensitive(boolean)
+    
+    def _set_button_sensitivity(self):
+        for button in [
+            self.pdf_button,
+            self.pay_button,
+            self.creditnote_button,
+        ]:
+            button.set_sensitive(False)
+        
+        self.post_button.set_sensitive(True)
+
+
+
+        if self.invoice.has_flag(invoice.POSTED):
+            self.post_button.set_sensitive(False)
+            self._write_protect(True)
+
+        if self.invoice.flags == invoice.POSTED:  # if posted, unpaid and not cancelled
+            self.pay_button.set_sensitive(True)
+            self.creditnote_button.set_sensitive(True)
+
+        
+        if self.invoice.has_flags(invoice.POSTED | invoice.PAID):
+            self.post_button.set_sensitive(False)
+            self.pay_button.set_sensitive(False)
+
+        if self.invoice.has_flags(
+            invoice.POSTED
+        ) and not self.invoice.has_flag(
+            invoice.CANCELLED | invoice.CREDIT_NOTE
+        ):
+            self.creditnote_button.set_sensitive(True)
+
+        if self.invoice.has_flag(invoice.POSTED):
+            self.pdf_button.set_sensitive(True)
+
         
     
     def on_cancel(self, widget):
@@ -309,7 +398,7 @@ class InvoiceView(Gtk.Box):
 
     def new_invoice(self, customer):
         """Resets view with fresh invoice for given customer"""
-        self.invoice = Invoice(customer)
+        self.invoice = invoice.Invoice(customer)
         self._blank_item_input()
         self.delivery_date_entry.set_text(self.invoice.delivery_date)
         self.calendar.select_month(self.invoice.date.month, self.invoice.date.year)
@@ -325,6 +414,8 @@ class InvoiceView(Gtk.Box):
         self.total_value.set_markup("<b>0,00</b>")
         config = load_config()
         self.due_days_entry.set_text(config['faktura']['betalingsfrist i dager'])
+        self._set_button_sensitivity()
+        self._write_protect(False)
 
         
 
