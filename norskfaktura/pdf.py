@@ -28,11 +28,12 @@ def create_pdf(invoice):
     #
 
     # create file
-    default_directory = os.path.expanduser("~/.config/norskfaktura/")
     if pdf_directory:
-        filename = os.path.join(pdf_directory, f"{common.pad_zeroes(invoice.id, 6)}.pdf")
+        pdf_directory = os.path.expanduser(pdf_directory)
     else:
-        filename = os.path.join(default_directory, f"{common.pad_zeroes(invoice.id, 6)}.pdf")
+        pdf_directory = os.path.expanduser("~/.config/norskfaktura/")
+    filename = os.path.join(pdf_directory, f"{common.pad_zeroes(invoice.id, 6)}.pdf")
+
     pdf = SimpleDocTemplate(
         filename,
         title=f"{company['navn']} - faktura nr {invoice.id}",
@@ -42,9 +43,9 @@ def create_pdf(invoice):
         topmargin=0
     )
 
-
     # logo and message
     if logo_path:
+        logo_path = os.path.expanduser(logo_path)
         img = Image(logo_path, 5*cm, 2.5*cm)
     else:
         img = None
@@ -85,7 +86,7 @@ def create_pdf(invoice):
         ["", "", "Org nr:", company['org. nr']],
         [invoice.customer.name, "", "Tlf:", company['tlf']],
         [invoice.customer.address_lines[0], "", "Epost:", company['epost']],
-        [invoice.customer.address_lines[1], "", "Leveringsdato:", invoice.due],
+        [invoice.customer.address_lines[1], "", "Leveringsdato:", invoice.delivery_date],
         [invoice.customer.address_lines[2], "", "Levert til:", invoice.delivery_address[0]],
         [customer_org_no, "", "", invoice.delivery_address[1]],
         [message, "", "", invoice.delivery_address[2]],
@@ -129,7 +130,9 @@ def create_pdf(invoice):
             [row[1], row[2], row[3], f"{row[4]}%", f"{row[5]}%", f"{row[6]} kr"]
         )
     
+    invoice.total = invoice.total * -1
     vat, total = invoice.get_totals()
+    invoice.calculate_sums()
     if invoice.has_flag(inv.CREDIT_NOTE):
         post_note = f"Denne kreditnota OPPHEVER tidligere faktura nr {invoice.credit_ref}"
         total_label = "TIL GODE:"
