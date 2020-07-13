@@ -29,6 +29,7 @@ class Invoice:
         self.rows = []  # list of lists
 
         # summations
+        self.customer_balance = 0
         self.total_vat = 0
         self.total = 0
 
@@ -36,13 +37,15 @@ class Invoice:
         self.due = self.date + timedelta(days=days_from_now)
 
     def get_totals(self):
-        return common.money_to_str(self.total_vat), common.money_to_str(self.total)
+        return (common.money_to_str(self.total_vat), 
+            common.money_to_str(self.customer_balance),
+            common.money_to_str(self.total))
 
     def calculate_sums(self):
         """Recalculates the total VAT and sum"""
         vats = [int(row[1]*row[2]*row[3]*(row[4]-1)) for row in self.rows]
         totals = [row[-1] for row in self.rows]
-        self.total = sum(totals)
+        self.total = sum(totals) - self.customer_balance
         self.total_vat = sum(vats)
 
     def add_row(self, row):
@@ -102,6 +105,10 @@ class Invoice:
         del self.rows[index]
         self.calculate_sums()
 
+    def set_customer_balance(self, balance):
+        self.customer_balance = common.str_to_money(balance)
+        self.calculate_sums()
+
 
     def post(self):
         """Sets the posted flag, and saves to db"""
@@ -109,6 +116,8 @@ class Invoice:
         self.save()
     
     def pay(self):
+        self.customer_balance = self.total
+        self.calculate_sums()
         self.flags |= PAID
         self.save()
 
@@ -143,8 +152,9 @@ class Invoice:
                     delivery_address_one,
                     delivery_address_two,
                     delivery_postal_code,
+                    customer_balance,
                     flags)
-                VALUES (?""" + ", ?"*9 + ")",
+                VALUES (?""" + ", ?"*10 + ")",
                 (
                     self.id,
                     self.customer.id,
@@ -155,6 +165,7 @@ class Invoice:
                     self.delivery_address[0],
                     self.delivery_address[1],
                     self.delivery_address[2],
+                    self.customer_balance,
                     self.flags
                 )
             )

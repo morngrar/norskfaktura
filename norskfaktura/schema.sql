@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS invoices (
 
     credit_ref INTEGER,  -- reference in case of a credit note, may be NULL
 
+    customer_balance INTEGER,    -- amount already paid by customer
+
     -- boolean flags set as bits (bitwise operators as in python/c++)
     flags INTEGER NOT NULL,
 

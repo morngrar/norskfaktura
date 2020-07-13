@@ -139,6 +139,15 @@ class InvoiceView(Gtk.Box):
         due_box.pack_start(self.due_days_entry, True, True, 0)
         grid.attach(due_box, 0, 9, 2, 1)
 
+        # Customer balance fields
+        customer_balance_label = Gtk.Label("Allerede betalt av kunde:")
+        self.customer_balance_entry = Gtk.Entry()
+        self.customer_balance_entry.set_width_chars(6)
+        balance_box = Gtk.Box(spacing=5)
+        balance_box.pack_start(customer_balance_label, False, True, 0)
+        balance_box.pack_start(self.customer_balance_entry, True, True, 0)
+        grid.attach(balance_box, 0, 10, 2, 1)
+
         # Summary below treeview
         total_vat_label = Gtk.Label("Herav Mva:")
         total_vat_label.set_xalign(1)
@@ -264,7 +273,7 @@ class InvoiceView(Gtk.Box):
         for row in self.invoice.get_gui_rows():
             self.invoice_item_store.append(row)
 
-        vat, total = self.invoice.get_totals()
+        vat, balance, total = self.invoice.get_totals()
         self.total_vat_value.set_text(vat)
         self.total_value.set_markup(f"<b>{total}</b>")
 
@@ -302,8 +311,8 @@ class InvoiceView(Gtk.Box):
             ]
         )
         self.invoice_item_store.append(row)
-
-        vat, total = self.invoice.get_totals()
+        self.invoice.set_customer_balance(self.customer_balance_entry.get_text())
+        vat, balance, total = self.invoice.get_totals()
         self.total_vat_value.set_text(vat)
         self.total_value.set_markup(f"<b>{total}</b>")
         self._blank_item_input()
@@ -327,6 +336,7 @@ class InvoiceView(Gtk.Box):
         self.invoice.delivery_address = [
             field.get_text() for field in self.delivery_address_fields
         ]
+        self.invoice.set_customer_balance(self.customer_balance_entry.get_text())
         self.invoice.post()
 
         # set buttons according to state
@@ -417,6 +427,7 @@ class InvoiceView(Gtk.Box):
         self._set_button_sensitivity()
         self._write_protect(False)
         self.message_entry.set_text("")
+        self.customer_balance_entry.set_text("0")
 
         
 

@@ -129,9 +129,9 @@ def create_pdf(invoice):
         data.append(
             [row[1], row[2], row[3], f"{row[4]}%", f"{row[5]}%", f"{row[6]} kr"]
         )
-    
-    invoice.total = invoice.total * -1
-    vat, total = invoice.get_totals()
+    if invoice.has_flag(inv.CREDIT_NOTE):
+        invoice.total = invoice.total * -1
+    vat, balance, total = invoice.get_totals()
     invoice.calculate_sums()
     if invoice.has_flag(inv.CREDIT_NOTE):
         post_note = f"Denne kreditnota OPPHEVER tidligere faktura nr {invoice.credit_ref}"
@@ -142,6 +142,7 @@ def create_pdf(invoice):
 
     data += [
         ["", "", "", "Herav Mva:", "", f"{vat} kr"],
+        ["", "", "", "Allerede betalt:", "", f"{balance} kr"],
         [post_note, "", "", total_label, "", f"{total} kr"],
     ]
 
@@ -167,7 +168,7 @@ def create_pdf(invoice):
         ('ALIGN',(2,0),(4,-4),'CENTER'),
         ('ALIGN',(-2,0),(-1,-1),'RIGHT'),
         ('LINEBELOW',(0,0),(-1,0),1,colors.black),
-        ('LINEABOVE',(0,-3),(-1,-3),1,colors.black),
+        ('LINEABOVE',(0,-4),(-1,-4),1,colors.black),
     ])
     specification.setStyle(style)
 
