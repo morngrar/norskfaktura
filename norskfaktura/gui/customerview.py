@@ -108,6 +108,7 @@ class CustomerView(Gtk.Box):
         ]
         self.customer.save()
 
+        self.window.set_title(f"Kunde - {self.customer.name}")
         # And on confirmation, enable invoice button
         self.create_invoice_button.set_sensitive(True)
 
@@ -118,6 +119,26 @@ class CustomerView(Gtk.Box):
     def on_create_invoice_clicked(self, widget):
         self.emit("new-invoice", self.customer)
 
+    def new_customer(self):
+        self.customer = None
+        self.create_invoice_button.set_sensitive(False)
+        for w in [
+            self.address_entry_one,
+            self.address_entry_two,
+            self.name_entry,
+            self.org_entry,
+            self.postal_entry,
+        ]:
+            w.set_text("")
+
+    def set_customer(self, customer):
+        self.customer = customer
+        self.name_entry.set_text(customer.name)
+        self.org_entry.set_text(customer.org_no)
+        self.address_entry_one.set_text(customer.address_lines[0])
+        self.address_entry_two.set_text(customer.address_lines[1])
+        self.postal_entry.set_text(customer.address_lines[2])
+        self.create_invoice_button.set_sensitive(True)
 
 def testWindow():
     class TestWindow(Gtk.Window):

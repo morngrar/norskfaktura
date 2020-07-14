@@ -2,10 +2,7 @@ import configparser
 import os
 
 config = configparser.ConfigParser()
-config_file = os.path.join(
-    os.path.expanduser("~"), 
-    ".config/norskfaktura/config.conf"
-)
+config_file = os.path.expanduser("~/.config/norskfaktura/norskfaktura.conf")
 
 def ensure_config_dir():
     directory = os.path.dirname(config_file)
@@ -45,6 +42,7 @@ def create_config():
 def load_config():
     if not os.path.exists(config_file):
         create_config()
+        os.system(f"gedit {config_file}")
     else:
         config.read(config_file)
 

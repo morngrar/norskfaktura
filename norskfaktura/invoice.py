@@ -263,3 +263,77 @@ class CreditNote(Invoice):
 
         self.invoice.flags |= CANCELLED
         self.invoice.save()
+
+
+from norskfaktura.customer import get_customer_by_id
+
+def get_invoice_by_id(id):
+    from norskfaktura.customer import get_customer_by_id
+    conn = sqlite3.connect(common.DBFILE)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+
+    c.execute(
+        """
+        SELECT *
+        FROM invoices
+        WHERE id = ?
+        """,
+        (id,)
+    )
+
+    result = c.fetchone()
+
+
+    invoice = Invoice(get_customer_by_id(result['customer']))
+    invoice.id = result['id']
+    invoice.delivery_address[0] = result['delivery_address_one']
+    invoice.delivery_address[1] = result['delivery_address_two']
+    invoice.delivery_address[2] = result['delivery_postal_code']
+    invoice.date = date.fromisoformat(result['date'])
+    invoice.due = date.fromisoformat(result['due'])
+    invoice.message = result['message']
+    invoice.credit_ref = result['credit_ref']
+    invoice.flags = result['flags']
+    invoice.customer_balance = result['customer_balance']
+
+
+    c.execute(
+        """
+        SELECT description, price, amount, discount, vat
+        FROM invoice_items
+        WHERE invoice = ?
+        """,
+        (invoice.id,)
+    )
+
+    rows = [
+        [*row, int(row[1]*row[2]*row[3]*row[4])] for row in c.fetchall()
+    ]
+
+    invoice.rows = rows
+    invoice.calculate_sums()
+
+    conn.commit()
+    conn.close()
+    return invoice
+
+
+def get_due_invoices():
+    conn = sqlite3.connect(common.DBFILE)
+    c = conn.cursor()
+
+    c.execute(
+        """
+        SELECT id
+        FROM invoices
+        WHERE flags = ?
+        """,
+        (POSTED,)
+    )
+
+    result = c.fetchall()
+
+    conn.commit()
+    conn.close()
+    return [get_invoice_by_id(row[0]) for row in result]

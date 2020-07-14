@@ -21,6 +21,9 @@ class MainWindow(Gtk.Window):
         self.main_view = MainView(self)
         self.stack.add_named(self.main_view, "main view")
         self.main_view.connect("new-customer-clicked", self.on_new_customer_clicked)
+        self.main_view.connect("customer-chosen", self.on_customer_chosen)
+        self.main_view.connect("invoice-chosen", self.on_invoice_chosen)
+        self.main_view.connect("invoice-search", self.on_invoice_search)
 
         self.customer_view = CustomerView(self)
         self.stack.add_named(self.customer_view, "customer view")
@@ -37,9 +40,23 @@ class MainWindow(Gtk.Window):
 
     def on_new_customer_clicked(self, *args):
         self.set_title("Ny kunde")
+        self.customer_view.new_customer()
         self.stack.set_visible_child(self.customer_view)
 
+    def on_customer_chosen(self, *args):
+        customer = args[-1]
+        self.set_title(f"Kunde - {customer.name}")
+        self.customer_view.set_customer(customer)
+        self.stack.set_visible_child(self.customer_view)
+
+    def on_invoice_chosen(self, *args):
+        invoice = args[-1]
+        self.set_title(f"Faktura nr {invoice.id}")
+        self.invoice_view.set_invoice(invoice)
+        self.stack.set_visible_child(self.invoice_view)
+
     def on_home_clicked(self, *args):
+        self.main_view.clear_search()
         self.stack.set_visible_child(self.main_view)
         self.set_title(WINDOW_TITLE)
 
@@ -49,8 +66,18 @@ class MainWindow(Gtk.Window):
 
         self.stack.set_visible_child(self.invoice_view)
 
+    def on_invoice_search(self, *args):
+        from norskfaktura.invoice import get_invoice_by_id
+        invoice = get_invoice_by_id(int(args[-1]))
+        if invoice:
+            self.set_title(f"Faktura nr {invoice.id}")
+            self.invoice_view.set_invoice(invoice)
+            self.stack.set_visible_child(self.invoice_view)
+
 def show_main_window():
     win = MainWindow()
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
+    from norskfaktura.config import load_config
+    load_config()
     Gtk.main()

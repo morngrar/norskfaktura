@@ -4,7 +4,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from norskfaktura.gui import signaling
-from norskfaktura import invoice
+from norskfaktura import invoice as inv
 from norskfaktura.config import load_config
 from norskfaktura.common import pad_zeroes
 
@@ -255,6 +255,37 @@ class InvoiceView(Gtk.Box):
         ]:
             button_box.pack_start(b, False, True, 0)
 
+    def set_invoice(self, invoice):
+        self.invoice = invoice
+        self._refresh_rows()
+        self._blank_item_input()
+        if invoice.message:
+            self.message_entry.set_text(self.invoice.message)
+        else:
+            self.message_entry.set_text("")
+
+        self.delivery_date_entry.set_text(self.invoice.delivery_date)
+        self.calendar.select_month(self.invoice.date.month, self.invoice.date.year)
+        self.calendar.select_day(self.invoice.date.day)
+        for i in range(3):
+            self.delivery_address_fields[i].set_text(self.invoice.delivery_address[i])
+        self._write_protect(True)
+        self.customer_info_labels["name"].set_text(invoice.customer.name)
+        self.customer_info_labels["org"].set_text(invoice.customer.org_no)
+        for i in range(3):
+            self.customer_info_labels["addr"][i].set_text(invoice.customer.address_lines[i])
+        self.invoice.calculate_sums()
+        vat, balance, total = self.invoice.get_totals()
+
+        self.total_vat_value.set_text(vat)
+        self.total_value.set_markup(f"<b>{total}</b>")
+        self.customer_balance_entry.set_text(balance)
+        self.due_days_entry.set_text(
+            str((invoice.due - invoice.date).days)
+        )
+        self._set_button_sensitivity()
+        
+
     def on_pay_clicked(self, widget):
         self.invoice.pay()
         self._set_button_sensitivity()
@@ -266,7 +297,7 @@ class InvoiceView(Gtk.Box):
     def on_creditnote_clicked(self, widget):
         """Generates a new invoice which is inverse of the current one"""
         self.window.set_title(f"Ny Kreditnota for faktura nr {self.invoice.id}")
-        self.invoice = invoice.CreditNote(self.invoice)
+        self.invoice = inv.CreditNote(self.invoice)
         self._set_button_sensitivity()
         self._write_protect(True)
         self.message_entry.set_sensitive(True)  # should be able to change message
@@ -321,7 +352,7 @@ class InvoiceView(Gtk.Box):
 
     def on_remove_row(self, widget):
         selection = self.treeview.get_selection()
-        model,list_iter = selection.get_selected ()
+        model,list_iter = selection.get_selected()
         if list_iter != None:
             index = model[list_iter][0] - 1
             self.invoice.remove_row(index)
@@ -381,27 +412,27 @@ class InvoiceView(Gtk.Box):
 
 
 
-        if self.invoice.has_flag(invoice.POSTED):
+        if self.invoice.has_flag(inv.POSTED):
             self.post_button.set_sensitive(False)
             self._write_protect(True)
 
-        if self.invoice.flags == invoice.POSTED:  # if posted, unpaid and not cancelled
+        if self.invoice.flags == inv.POSTED:  # if posted, unpaid and not cancelled
             self.pay_button.set_sensitive(True)
             self.creditnote_button.set_sensitive(True)
 
         
-        if self.invoice.has_flags(invoice.POSTED | invoice.PAID):
+        if self.invoice.has_flags(inv.POSTED | inv.PAID):
             self.post_button.set_sensitive(False)
             self.pay_button.set_sensitive(False)
 
         if self.invoice.has_flags(
-            invoice.POSTED
+            inv.POSTED
         ) and not self.invoice.has_flag(
-            invoice.CANCELLED | invoice.CREDIT_NOTE
+            inv.CANCELLED | inv.CREDIT_NOTE
         ):
             self.creditnote_button.set_sensitive(True)
 
-        if self.invoice.has_flag(invoice.POSTED):
+        if self.invoice.has_flag(inv.POSTED):
             self.pdf_button.set_sensitive(True)
 
         
@@ -411,7 +442,7 @@ class InvoiceView(Gtk.Box):
 
     def new_invoice(self, customer):
         """Resets view with fresh invoice for given customer"""
-        self.invoice = invoice.Invoice(customer)
+        self.invoice = inv.Invoice(customer)
         self._blank_item_input()
         self.delivery_date_entry.set_text(self.invoice.delivery_date)
         self.calendar.select_month(self.invoice.date.month, self.invoice.date.year)
