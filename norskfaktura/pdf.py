@@ -135,7 +135,7 @@ def create_pdf(invoice):
     if invoice.has_flag(inv.CREDIT_NOTE):
         invoice.calculate_sums()
     if invoice.has_flag(inv.CREDIT_NOTE):
-        post_note = f"Dette dokumentet krediterer tidligere faktura nr {invoice.credit_ref}"
+        post_note = f"Dette dokumentet OPPHEVER tidligere faktura nr {invoice.credit_ref}"
         total_label = "TIL GODE:"
     else:
         post_note = "Vennligst oppgi fakturanummer ved betaling."

@@ -234,10 +234,7 @@ class CreditNote(Invoice):
         ] for row in invoice.rows]
 
         invoice.calculate_sums()
-        if invoice.has_flag(PAID):
-            self.customer_balance = invoice.total
-        else:
-            self.customer_balance = invoice.customer_balance
+        self.customer_balance = invoice.customer_balance
         self.calculate_sums()
 
         self.invoice = invoice # reference in case posting (and cancelling it)

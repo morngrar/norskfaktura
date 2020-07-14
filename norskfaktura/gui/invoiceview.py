@@ -268,7 +268,8 @@ class InvoiceView(Gtk.Box):
         self.window.set_title(f"Ny Kreditnota for faktura nr {self.invoice.id}")
         self.invoice = invoice.CreditNote(self.invoice)
         self._set_button_sensitivity()
-        self._write_protect(False)
+        self._write_protect(True)
+        self.message_entry.set_sensitive(True)  # should be able to change message
         self.invoice_item_store.clear()
         for row in self.invoice.get_gui_rows():
             self.invoice_item_store.append(row)
