@@ -20,7 +20,7 @@ class MainWindow(Gtk.Window):
 
         self.main_view = MainView(self)
         self.stack.add_named(self.main_view, "main view")
-        self.main_view.connect("customer-clicked", self.on_customer_clicked)
+        self.main_view.connect("new-customer-clicked", self.on_new_customer_clicked)
 
         self.customer_view = CustomerView(self)
         self.stack.add_named(self.customer_view, "customer view")
@@ -35,7 +35,8 @@ class MainWindow(Gtk.Window):
         vbox.pack_start(self.stack, True, True, 0)
 
 
-    def on_customer_clicked(self, *args):
+    def on_new_customer_clicked(self, *args):
+        self.set_title("Ny kunde")
         self.stack.set_visible_child(self.customer_view)
 
     def on_home_clicked(self, *args):
