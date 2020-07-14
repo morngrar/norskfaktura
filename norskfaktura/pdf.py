@@ -160,7 +160,7 @@ def create_pdf(invoice):
     style = TableStyle([
         ('FONTNAME', (0,0), (-1,0), 'Courier-Bold'),
         ('FONTNAME', (0,1), (-1,-1), 'Courier'),
-        ('FONTNAME', (0,-2), (-1,-1), 'Courier-Bold'),
+        ('FONTNAME', (0,-2), (-1,-1), 'Helvetica-Bold'),
         ("SPAN", (0,-2), (1,-2)),
         ("SPAN", (-3,-3), (-2,-3)),
         ("SPAN", (-3,-2), (-2,-2)),

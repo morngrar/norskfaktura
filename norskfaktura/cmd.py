@@ -6,3 +6,6 @@ def test():
     common.DBFILE = "test.db"
     common.ensure_db()
     show_main_window()
+
+def main():
+    show_main_window()

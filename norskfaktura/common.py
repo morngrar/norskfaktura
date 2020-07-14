@@ -5,8 +5,10 @@ import os
 DBFILE = os.path.expanduser("~/.config/norskfaktura/norskfaktura.db")
 
 from norskfaktura import load_sql_file
+from norskfaktura.config import ensure_config_dir
 
 def ensure_db():
+    ensure_config_dir()
     if not os.path.exists(DBFILE):
         host_dir = os.path.dirname(os.path.abspath(__file__))
         sql_file = os.path.join(host_dir, "schema.sql")

@@ -287,11 +287,13 @@ def get_invoice_by_id(id):
 
     invoice = Invoice(get_customer_by_id(result['customer']))
     invoice.id = result['id']
+    invoice.delivery_date = result['delivery_date']
     invoice.delivery_address[0] = result['delivery_address_one']
     invoice.delivery_address[1] = result['delivery_address_two']
     invoice.delivery_address[2] = result['delivery_postal_code']
-    invoice.date = date.fromisoformat(result['date'])
-    invoice.due = date.fromisoformat(result['due'])
+    from norskfaktura import compat
+    invoice.date = compat.date_from_iso_string(result['date']) #date.fromisoformat(result['date'])
+    invoice.due = compat.date_from_iso_string(result['due']) #date.fromisoformat(result['due'])
     invoice.message = result['message']
     invoice.credit_ref = result['credit_ref']
     invoice.flags = result['flags']

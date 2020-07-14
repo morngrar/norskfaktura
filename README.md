@@ -24,4 +24,8 @@ Kjør denne kommandoen på fedora:
 
     sudo dnf install gcc gobject-introspection gobject-introspection-devel cairo cairo-devel pkgconf-pkg-config python3-devel cairo-gobject-devel
 
+Kjør denne kommandoen på ubuntu 18.04:
+
+    sudo apt install gcc python3-pip gobject-introspection python3-gi libcairo-dev pkgconf python3-dev libcairo-gobject2 libgirepository1.0-dev
+
 ref: [https://stackoverflow.com/a/54795222](https://stackoverflow.com/a/54795222)

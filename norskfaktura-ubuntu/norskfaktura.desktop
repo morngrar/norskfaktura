@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Norsk Faktura
+Exec=norskfaktura
+Icon=norskfaktura
+Type=Application
+Categories=GTK;GNOME;Utility;

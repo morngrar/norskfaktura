@@ -41,6 +41,7 @@ def create_config():
 
 def load_config():
     if not os.path.exists(config_file):
+        ensure_config_dir()
         create_config()
         os.system(f"gedit {config_file}")
     else:

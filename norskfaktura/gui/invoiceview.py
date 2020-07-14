@@ -264,9 +264,11 @@ class InvoiceView(Gtk.Box):
         else:
             self.message_entry.set_text("")
 
+        delivery_date = [int(e) for e in self.invoice.delivery_date.split(".")]
+        
+        self.calendar.select_month(delivery_date[1]-1, delivery_date[2])
+        self.calendar.select_day(delivery_date[0])
         self.delivery_date_entry.set_text(self.invoice.delivery_date)
-        self.calendar.select_month(self.invoice.date.month, self.invoice.date.year)
-        self.calendar.select_day(self.invoice.date.day)
         for i in range(3):
             self.delivery_address_fields[i].set_text(self.invoice.delivery_address[i])
         self._write_protect(True)
@@ -287,6 +289,22 @@ class InvoiceView(Gtk.Box):
         
 
     def on_pay_clicked(self, widget):
+        dialog = Gtk.MessageDialog(
+            self.window,
+            0,
+            Gtk.MessageType.WARNING,
+            Gtk.ButtonsType.OK_CANCEL,
+            "Betale faktura",
+        )
+        dialog.format_secondary_text(
+            "Du er i ferd med å sette denne fakturan som betalt, "
+            "den vil da forsvinne fra oversikten over utestående fakturaer."
+        )
+        response = dialog.run()
+        dialog.destroy()
+        if response == Gtk.ResponseType.CANCEL:
+            return
+
         self.invoice.pay()
         self._set_button_sensitivity()
 
@@ -328,7 +346,7 @@ class InvoiceView(Gtk.Box):
     def on_date_selection(self, calendar):
         date = calendar.get_date()
         day = pad_zeroes(date.day, 2)
-        month = pad_zeroes(date.month, 2)
+        month = pad_zeroes(date.month+1, 2)
         self.delivery_date_entry.set_text(
             f"{day}.{month}.{date.year}"
         )
@@ -364,12 +382,60 @@ class InvoiceView(Gtk.Box):
             self.invoice_item_store.append(row)
 
     def on_post_clicked(self, widget):
+        if not self.invoice.rows:
+            #dialog
+            dialog = Gtk.MessageDialog(
+                self.window,
+                0,
+                Gtk.MessageType.ERROR,
+                Gtk.ButtonsType.CANCEL,
+                "Tom faktura!",
+            )
+            dialog.format_secondary_text(
+                "En faktura må ha rader for å kunne posteres."
+            )
+            dialog.run()
+            dialog.destroy()
+            return
+        
+
+        if self.invoice.has_flag(inv.CREDIT_NOTE):
+            dialog_title = "Postere kreditnota"
+            dialog_message = (
+                "Er du sikker på at du vil postere? Dette vil kansellere den "
+                "opprinnelige fakturaen, og den vil forsvinne fra oversikten "
+                "over utestående fakturaer. Kreditnotaen kan ikke endres eller "
+                "slettes etter dette."
+            )
+        else:
+            dialog_title = "Postere faktura"
+            dialog_message = (
+                "Er du sikker på at du vil postere? Fakturaen kan ikke endres etterpå."
+            )
+
+        dialog = Gtk.MessageDialog(
+            self.window,
+            0,
+            Gtk.MessageType.WARNING,
+            Gtk.ButtonsType.OK_CANCEL,
+            dialog_title,
+        )
+        dialog.format_secondary_text(dialog_message)
+        response = dialog.run()
+        dialog.destroy()
+        if response == Gtk.ResponseType.CANCEL:
+            return
+
+        self.invoice.delivery_date = self.delivery_date_entry.get_text()
         self.invoice.message = self.message_entry.get_text()
         self.invoice.set_due_date(int(self.due_days_entry.get_text()))
         self.invoice.delivery_address = [
             field.get_text() for field in self.delivery_address_fields
         ]
         self.invoice.set_customer_balance(self.customer_balance_entry.get_text())
+
+
+
         self.invoice.post()
 
         # set buttons according to state
@@ -444,8 +510,7 @@ class InvoiceView(Gtk.Box):
         """Resets view with fresh invoice for given customer"""
         self.invoice = inv.Invoice(customer)
         self._blank_item_input()
-        self.delivery_date_entry.set_text(self.invoice.delivery_date)
-        self.calendar.select_month(self.invoice.date.month, self.invoice.date.year)
+        self.calendar.select_month(self.invoice.date.month-1, self.invoice.date.year)
         self.calendar.select_day(self.invoice.date.day)
         for i in range(3):
             self.delivery_address_fields[i].set_text(self.invoice.delivery_address[i])

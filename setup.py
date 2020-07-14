@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='norskfaktura',
-    version='0.0.1',
+    version='0.1.1',
     description='Database solution for handling a small business',
     url='',
     author='Bjørnsen IT',
@@ -13,6 +13,7 @@ setup(
     entry_points = {
         "console_scripts" : [
             "fakturatest=norskfaktura.cmd:test",
+            "norskfaktura=norskfaktura.cmd:main",
         ],
     },
     packages=find_packages(include=['norskfaktura', 'norskfaktura.*']),
