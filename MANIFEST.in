@@ -1,2 +1,5 @@
 include norskfaktura/schema.sql
 include README.*
+include LICENSE
+include norskfaktura/norskfaktura.svg
+include norskfaktura/norskfaktura.desktop

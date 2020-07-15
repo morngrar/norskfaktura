@@ -2,17 +2,18 @@ from setuptools import setup, find_packages
 
 setup(
     name='norskfaktura',
-    version='0.1.1',
-    description='Database solution for handling a small business',
+    version='0.1.2',
+    description='Database solution for invoicing in a small business',
     url='',
-    author='Bjørnsen IT',
+    author='Svein-Kåre Bjørnsen',
     author_email='bjornsenit@gmail.com',
     test_suite="nose.collector",
     tests_require=["nose"],
-    license='MIT',
+    license='GPL-3.0-only',
     entry_points = {
         "console_scripts" : [
-            "fakturatest=norskfaktura.cmd:test",
+            "nf-dev=norskfaktura.cmd:dev",
+            "nf-install-icons=norskfaktura.cmd:install_icons",
             "norskfaktura=norskfaktura.cmd:main",
         ],
     },
