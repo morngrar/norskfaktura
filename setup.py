@@ -1,9 +1,14 @@
 from setuptools import setup, find_packages
 
+def readme():
+    with open('README.md') as f:
+        return f.read()
+
 setup(
     name='norskfaktura',
-    version='0.1.2',
-    description='Database solution for invoicing in a small business',
+    version='0.1.4',
+    description='Norwegian database solution for invoicing in a small business',
+    long_description=readme(),
     url='',
     author='Svein-Kåre Bjørnsen',
     author_email='bjornsenit@gmail.com',
