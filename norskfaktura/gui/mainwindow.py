@@ -16,7 +16,7 @@ class MainWindow(Gtk.Window):
 
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
-        self.stack.set_transition_duration(2000)
+        self.stack.set_transition_duration(100)
 
         self.main_view = MainView(self)
         self.stack.add_named(self.main_view, "main view")
