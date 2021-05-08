@@ -1,4 +1,5 @@
 include norskfaktura/schema.sql
+include norskfaktura/fonts/*
 include README.*
 include LICENSE
 include CHANGELOG.md
