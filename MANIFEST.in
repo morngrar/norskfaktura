@@ -1,5 +1,6 @@
 include norskfaktura/schema.sql
-include norskfaktura/fonts/*
+recursive-include norskfaktura/fonts/clear_sans *.ttf
+recursive-include norskfaktura/fonts/courier_prime *.ttf
 include README.*
 include LICENSE
 include CHANGELOG.md

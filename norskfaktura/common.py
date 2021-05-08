@@ -1,6 +1,8 @@
 
 import os
 
+HOST_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Production:
 DBFILE = os.path.expanduser("~/.config/norskfaktura/norskfaktura.db")
 
@@ -10,8 +12,7 @@ from norskfaktura.config import ensure_config_dir
 def ensure_db():
     ensure_config_dir()
     if not os.path.exists(DBFILE):
-        host_dir = os.path.dirname(os.path.abspath(__file__))
-        sql_file = os.path.join(host_dir, "schema.sql")
+        sql_file = os.path.join(HOST_DIR, "schema.sql")
         load_sql_file(sql_file, DBFILE)
 
 ensure_db()

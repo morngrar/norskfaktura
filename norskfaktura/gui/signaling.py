@@ -2,6 +2,7 @@
 from gi.repository import GObject
 
 def new(signal, widget):
+    """Convenience wrapper around the GObject signal emitter"""
     GObject.signal_new(
         signal, 
         widget, 

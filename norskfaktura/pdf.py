@@ -4,6 +4,8 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 import os
 
@@ -22,6 +24,13 @@ def create_pdf(invoice):
     logo_path = config['miljø']['logofil']
     pdf_command = config['miljø']['pdf-kommando']
     company = config['firma']
+
+    # Load fonts
+    font_dir = os.path.join(common.HOST_DIR, "fonts")
+    pdfmetrics.registerFont(TTFont("Courier Prime Bold", os.path.join(font_dir, "courier_prime/Courier Prime Bold.ttf")))
+    pdfmetrics.registerFont(TTFont("Courier Prime Regular", os.path.join(font_dir, "courier_prime/Courier Prime.ttf")))
+    pdfmetrics.registerFont(TTFont("Clear Sans Regular", os.path.join(font_dir, "clear_sans/ClearSans-Regular.ttf")))
+    pdfmetrics.registerFont(TTFont("Clear Sans Bold", os.path.join(font_dir, "clear_sans/ClearSans-Bold.ttf")))
 
     #
     # Generate pdf
@@ -100,13 +109,13 @@ def create_pdf(invoice):
     style = TableStyle([
 
         # Header text
-        ('FONTNAME', (0,0), (-1,0), 'Courier-Bold'),
+        ('FONTNAME', (0,0), (-1,0), 'Courier Prime Bold'),
         ('FONTSIZE', (0,0), (-1,0), 18),
         ("BOTTOMPADDING", (-1,0), (-1,0), 12),
 
         ('FONTSIZE', (-1,1), (-1,3), 12),
         ("BOTTOMPADDING", (0,3), (-1,3), 12),
-        ('FONTNAME', (0,-2), (-1,-1), 'Helvetica-Bold'),
+        ('FONTNAME', (0,-2), (-1,-1), 'Clear Sans Bold'),
 
         # image spanning
         ("SPAN", (0,0), (0,3)),
@@ -158,9 +167,9 @@ def create_pdf(invoice):
 
     # add styling to specification
     style = TableStyle([
-        ('FONTNAME', (0,0), (-1,0), 'Courier-Bold'),
-        ('FONTNAME', (0,1), (-1,-1), 'Courier'),
-        ('FONTNAME', (0,-2), (-1,-1), 'Helvetica-Bold'),
+        ('FONTNAME', (0,0), (-1,0), 'Courier Prime Bold'),
+        ('FONTNAME', (0,1), (-1,-1), 'Courier Prime Regular'),
+        ('FONTNAME', (0,-2), (-1,-1), 'Clear Sans Bold'),
         ("SPAN", (0,-2), (1,-2)),
         ("SPAN", (-3,-3), (-2,-3)),
         ("SPAN", (-3,-2), (-2,-2)),
