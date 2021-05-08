@@ -1,6 +1,19 @@
+<p align="center">
+  <img width="300" src="https://raw.githubusercontent.com/morngrar/norskfaktura/05c343f5804dfab8557b1c71176db10d48a35184/norskfaktura/norskfaktura.svg">
+</p>
+
 # Norsk Faktura
 
+
 Norsk Faktura er et fakturaprogram for moderne linux, laget for å tilfredsstille norske juridiske krav. Det lagrer all informasjon lokalt på maskinen.
+
+<p align="center">
+  <img width="600" src="https://user-images.githubusercontent.com/6575679/112526840-b1139100-8da2-11eb-8a3e-4fa64f04f802.png">
+</p>
+
+<p align="center">
+  <img width="600" src="https://user-images.githubusercontent.com/6575679/112526852-b375eb00-8da2-11eb-864a-63a8ddb1eaf1.png">
+</p>
 
 ## Installasjon
 ### Eksterne avhengigheter
