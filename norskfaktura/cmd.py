@@ -1,5 +1,12 @@
+""" cmd.py
+
+Contains functions that turns into scripts for the user if the
+app is installed via pip.
+"""
+
 import norskfaktura.config as cfg
 from norskfaktura.gui import show_main_window
+from norskfaktura.common import HOST_DIR
 
 def dev():
     """Run against development db"""
@@ -16,9 +23,9 @@ def install_icons():
     for d in [icon_dir, app_dir]:
         if not os.path.exists(d):
             os.makedirs(d)
-    host_dir = os.path.dirname(os.path.abspath(__file__))
-    icon_file = os.path.join(host_dir, "norskfaktura.svg")
-    desktop_file = os.path.join(host_dir, "norskfaktura.desktop")
+    asset_dir = os.path.join(HOST_DIR, "assets")
+    icon_file = os.path.join(asset_dir, "norskfaktura.svg")
+    desktop_file = os.path.join(asset_dir, "norskfaktura.desktop")
 
     import shutil
     shutil.copy(icon_file, os.path.join(icon_dir, "norskfaktura.svg"))
