@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="300" src="https://raw.githubusercontent.com/morngrar/norskfaktura/05c343f5804dfab8557b1c71176db10d48a35184/norskfaktura/norskfaktura.svg">
+  <img src="https://raw.githubusercontent.com/morngrar/norskfaktura/master/norskfaktura/norskfaktura.png">
 </p>
 
 # Norsk Faktura
