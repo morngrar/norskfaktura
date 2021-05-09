@@ -1,4 +1,9 @@
 
+""" common.py
+
+Contains common functionality across the app. Utility functions and globals.
+"""
+
 import os
 
 HOST_DIR = os.path.dirname(os.path.abspath(__file__))
