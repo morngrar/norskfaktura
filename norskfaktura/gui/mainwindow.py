@@ -7,6 +7,14 @@ from norskfaktura.gui import CustomerView, MainView, InvoiceView
 WINDOW_TITLE = "Norsk Faktura"
 
 class MainWindow(Gtk.Window):
+    """Main window of the application.
+
+    This is the window which holds most of the applications 'views', which
+    are simply boxes which contain widgets and layouts and functionality.
+    The OS window remains the same, and the child views are switched aout
+    as the user navigates between them.
+    """
+
     def __init__(self):
         Gtk.Window.__init__(self, title=WINDOW_TITLE)
         self.set_border_width(10)
