@@ -36,7 +36,7 @@ def pad_zeroes(n, padding):
 def str_to_money(string):
     """Takes a number, with or without a decimal point, and converts it to money"""
     string = string.replace(",",".")
-    return int(float(string)*100)
+    return int(round(float(string)*100))
 
 
 def money_to_str(integer):
