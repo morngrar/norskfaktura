@@ -6,7 +6,7 @@ def readme():
 
 setup(
     name='norskfaktura',
-    version='0.1.5',
+    version='0.1.6',
     description='Norwegian database solution for invoicing in a small business',
     long_description=readme(),
     url='',
