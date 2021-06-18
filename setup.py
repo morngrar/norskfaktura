@@ -9,6 +9,7 @@ setup(
     version='0.1.6',
     description='Norwegian database solution for invoicing in a small business',
     long_description=readme(),
+    long_description_content_type='text/markdown',
     url='',
     author='Svein-Kåre Bjørnsen',
     author_email='bjornsenit@gmail.com',
