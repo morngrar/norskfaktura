@@ -43,7 +43,7 @@ class Invoice:
 
     def calculate_sums(self):
         """Recalculates the total VAT and sum"""
-        vats = [int(row[1]*row[2]*row[3]*(row[4]-1)) for row in self.rows]
+        vats = [int(round(row[1]*row[2]*row[3]*(row[4]-1))) for row in self.rows]
         totals = [row[-1] for row in self.rows]
         self.total = sum(totals) - self.customer_balance
         self.total_vat = sum(vats)
@@ -58,10 +58,10 @@ class Invoice:
             row[0],
             common.str_to_money(row[1]),
             int(row[2]),
-            1-float(row[3])/100,
-            1+float(row[4])/100,
+            1-int(row[3])/100,
+            1+int(row[4])/100,
         ]
-        tmp.append(int(tmp[1]*tmp[2]*tmp[3]*tmp[4]))
+        tmp.append(int(round(tmp[1]*tmp[2]*tmp[3]*tmp[4])))
 
         self.rows.append(tmp)
         self.calculate_sums()
@@ -310,7 +310,7 @@ def get_invoice_by_id(id):
     )
 
     rows = [
-        [*row, int(row[1]*row[2]*row[3]*row[4])] for row in c.fetchall()
+        [*row, int(round(row[1]*row[2]*row[3]*row[4]))] for row in c.fetchall()
     ]
 
     invoice.rows = rows
