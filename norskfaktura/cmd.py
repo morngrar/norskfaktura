@@ -12,6 +12,8 @@ def dev():
     """Run against development db"""
     from norskfaktura import common
     common.DBFILE = "test.db"
+    cfg.config_file = "test.conf"
+    cfg.load_config()
     common.ensure_db()
     show_main_window()
 
@@ -33,4 +35,5 @@ def install_icons():
     print("Done.")
 
 def main():
+    cfg.load_config()
     show_main_window()

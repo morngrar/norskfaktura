@@ -22,7 +22,6 @@ def create_pdf(invoice):
     config = load_config()
     pdf_directory = config['miljø']['pdfmappe']
     logo_path = config['miljø']['logofil']
-    pdf_command = config['miljø']['pdf-kommando']
     company = config['firma']
 
     # Load fonts
@@ -191,6 +190,5 @@ def create_pdf(invoice):
 
     pdf.build(story)
 
-    if pdf_command:
-        os.system(f"{pdf_command} {filename} &")
+    os.system(f"xdg-open {filename} &")
 

@@ -2,6 +2,6 @@
 
 pip uninstall norskfaktura
 python setup.py sdist
-pip install dist/*
+pip install --user dist/*
 nf-dev
 

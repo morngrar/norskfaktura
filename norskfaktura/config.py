@@ -6,7 +6,7 @@ config_file = os.path.expanduser("~/.config/norskfaktura/norskfaktura.conf")
 
 def ensure_config_dir():
     directory = os.path.dirname(config_file)
-    if not os.path.exists(directory):
+    if directory and not os.path.exists(directory):
         os.makedirs(directory)
 
 def create_config():
@@ -29,7 +29,6 @@ def create_config():
     }
 
     config['miljø'] = {
-        'pdf-kommando' : 'evince',
         'logofil' : '',
         'pdfmappe' : ''
     }

@@ -86,6 +86,4 @@ def show_main_window():
     win = MainWindow()
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
-    from norskfaktura.config import load_config
-    load_config()
     Gtk.main()
