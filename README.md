@@ -54,6 +54,8 @@ Man kan installere eventuelle oppdateringer også v.h.a pip:
 ### Konfigurering
 Når du starter applikasjonen for første gang vil du få opp et vindu for å legge inn informasjon om ditt firma/organisasjon. Om du oppdager at du har gjort noe feil, eller vil gjøre endringer senere, kan du komme tilbake til denne skjermen ved å klikke på "instillinger"-knappen nede i høyre hjørne av hovedbildet.
 
+Foruten første fakturanummer og filstiene til pdf-mappen og logoen, så skriver du inn resten av feltene slik du vil at de skal vises på fakturaen.
+
 
 ## Lage og bruke et virtuelt miljø for utvikling:
 **Merk: det er per nå ikke mulig å utvikle programmet fra innsiden av et virtuelt miljø på en enkel måte, se #10
