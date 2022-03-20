@@ -28,7 +28,6 @@ class ConfigWindow(Gtk.Window):
         self.main_view = ConfigView(self)
         self.stack.add_named(self.main_view, "main view")
 
-
         vbox.pack_start(self.stack, True, True, 0)
 
 

@@ -35,6 +35,9 @@ def create_config():
 
     ensure_config_dir()
 
+    write_config()
+
+def write_config():
     with open(config_file, "w") as f:
         config.write(f)
 
@@ -42,7 +45,9 @@ def load_config():
     if not os.path.exists(config_file):
         ensure_config_dir()
         create_config()
-        os.system(f"gedit {config_file}")
+        from norskfaktura.gui import show_config_window
+        show_config_window()
+
     else:
         config.read(config_file)
 

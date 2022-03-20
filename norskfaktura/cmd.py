@@ -11,7 +11,6 @@ from norskfaktura.common import HOST_DIR
 def dev():
     """Run against development db"""
     from norskfaktura import common
-    from norskfaktura.gui import show_config_window
     common.DBFILE = "test.db"
     cfg.config_file = "test.conf"
     cfg.load_config()

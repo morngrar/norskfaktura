@@ -14,6 +14,7 @@ class ConfigView(Gtk.Box):
 
     def __init__(self, window, *args, back_enabled=False, **kwargs):
         super().__init__(*args, **kwargs)
+        self.back_enabled = back_enabled
         self.window = window
         self.set_orientation(Gtk.Orientation.VERTICAL)
         self.set_hexpand(True)
@@ -77,8 +78,18 @@ class ConfigView(Gtk.Box):
         grid.attach(email_label, 0, row, 1, 1)
         self.email_entry = Gtk.Entry()
         self.email_entry.set_margin_top(top_margin)
-        self.email_entry.set_margin_bottom(vertical_margin)
         grid.attach(self.email_entry, 1, row, 3, 1)
+
+        label = Gtk.Label("Webside: ")
+        row += 1
+        label.set_justify(Gtk.Justification.RIGHT)
+        label.set_margin_left(horizontal_margin)
+        label.set_margin_right(5)
+        grid.attach(label, 0, row, 1, 1)
+        self.website_entry = Gtk.Entry()
+        self.website_entry.set_margin_top(top_margin)
+        self.website_entry.set_margin_bottom(vertical_margin)
+        grid.attach(self.website_entry, 1, row, 3, 1)
 
         address_label = Gtk.Label("Adresse: ")
         row += 1
@@ -158,6 +169,20 @@ class ConfigView(Gtk.Box):
         self.vat_checkbox.set_margin_right(horizontal_margin*2)
         grid.attach(self.vat_checkbox, 6, right_row, 4, 1)
 
+
+        label = Gtk.Label("Første faktura: ")
+        right_row += 1
+        label.set_justify(Gtk.Justification.RIGHT)
+        label.set_margin_left(horizontal_margin)
+        label.set_margin_top(top_margin)
+        grid.attach(label, 5, right_row, 1, 1)
+        self.first_no_entry = Gtk.Entry()
+        self.first_no_entry.set_margin_top(top_margin)
+        self.first_no_entry.set_margin_right(170)
+        grid.attach(self.first_no_entry, 6, right_row, 3, 1)
+        active = not back_enabled
+        self.first_no_entry.set_sensitive(active)
+
         label = Gtk.Label("Logo: ")
         right_row += 2
         label.set_justify(Gtk.Justification.RIGHT)
@@ -214,18 +239,69 @@ class ConfigView(Gtk.Box):
         self.back_button.set_margin_bottom(vertical_margin)
         grid.attach(self.back_button, 8, row, 1, 1)
         self.back_button.set_sensitive(back_enabled)
+
         
         # creating and attaching signal to go home
-        signaling.new("home-clicked", self) # signal to get back
+        if back_enabled:
+            signaling.new("home-clicked", self) # signal to get back
         self.back_button.connect("clicked", self.on_back_clicked)
 
 
+        self.load_data() # fill fields
 
-    def on_save_clicked(*args):
-        pass
+
+
+    def on_save_clicked(self, *args):
+        from norskfaktura.config import config, write_config
+        config["firma"]["navn"] = self.name_entry.get_text()
+        config["firma"]["org. nr"] = self.org_entry.get_text()
+        config["firma"]["tlf"] = self.phone_entry.get_text()
+        config["firma"]["epost"] = self.email_entry.get_text()
+        config["firma"]["webside"] = self.website_entry.get_text()
+        config["firma"]["adresse linje 1"] = self.address_entry_one.get_text()
+        config["firma"]["adresse linje 2"] = self.address_entry_two.get_text()
+        config["firma"]["postnr og sted"] = self.postal_entry.get_text()
+        config["firma"]["kontonummer"] = self.account_entry.get_text()
+        config["firma"]["første fakturanr"] = self.first_no_entry.get_text()
+        config["faktura"]["betalingsfrist i dager"] = self.due_entry.get_text()
+        config["miljø"]["logofil"] = self.logo_entry.get_text()
+        config["miljø"]["pdfmappe"] = self.pdf_entry.get_text()
+        if self.vat_checkbox.get_active():
+            config["firma"]["mva-registrert"] = "true"
+        else:
+            config["firma"]["mva-registrert"] = "false"
+
+        write_config()
+        if self.back_enabled:
+            self.emit("home-clicked", self)
+        else:
+            self.window.destroy()
 
     def on_back_clicked(self, widget):
         self.emit("home-clicked", self)
+
+    def load_data(self):
+        from norskfaktura.config import load_config
+
+        cfg = load_config()
+        self.name_entry.set_text(cfg["firma"]["navn"])
+        self.org_entry.set_text(cfg["firma"]["org. nr"])
+        self.phone_entry.set_text(cfg["firma"]["tlf"])
+        self.email_entry.set_text(cfg["firma"]["epost"])
+        self.website_entry.set_text(cfg["firma"]["webside"])
+        self.address_entry_one.set_text(cfg["firma"]["adresse linje 1"])
+        self.address_entry_two.set_text(cfg["firma"]["adresse linje 2"])
+        self.postal_entry.set_text(cfg["firma"]["postnr og sted"])
+        self.account_entry.set_text(cfg["firma"]["kontonummer"])
+        self.first_no_entry.set_text(cfg["firma"]["første fakturanr"])
+        self.due_entry.set_text(cfg["faktura"]["betalingsfrist i dager"])
+        self.logo_entry.set_text(cfg["miljø"]["logofil"])
+        self.pdf_entry.set_text(cfg["miljø"]["pdfmappe"])
+
+        if cfg["firma"]["mva-registrert"] == "true" or cfg["firma"]["mva-registrert"] == "True":
+            self.vat_checkbox.set_active(True)
+        else:
+            self.vat_checkbox.set_active(False)
 
 
 
@@ -239,7 +315,5 @@ class ConfigView(Gtk.Box):
 
 
 
-    def on_new_customer_clicked(self, widget):
-        self.emit("new-customer-clicked", 42)
 
 
