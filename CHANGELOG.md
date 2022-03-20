@@ -1,5 +1,10 @@
 # Endringslogg
 
+## v0.2.0
+- Konfigurering av programmet gjøres nå grafisk, og det er lagt til en knapp på hovedvinduet som gir en tilgang til å endre på ting etter førstegangsbruk.
+- Kundeskjermen har nå blitt responsiv dersom man endrer størrelsen på vinduet.
+- Dersom man legger inn en nettside i instillingene vil denne nå vises på fakturaer
+
 ## v0.1.8
 - Bruker nå `xdg-open` for å åpne pdf-filer, slik at man ikke trenger å konfigurere pdf-leseren man bruker
 - For testing lager programmet nå en configfil i working directory i stedet for å bruke systemfilen.

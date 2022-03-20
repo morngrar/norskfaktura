@@ -90,18 +90,35 @@ def create_pdf(invoice):
     date = invoice.date.strftime("%d.%m.%Y")
     due = invoice.due.strftime("%d.%m.%Y")
 
-    data += [
-        ["", "", "Org nr:", company['org. nr']],
-        [invoice.customer.name, "", "Tlf:", company['tlf']],
-        [invoice.customer.address_lines[0], "", "Epost:", company['epost']],
-        [invoice.customer.address_lines[1], "", "Leveringsdato:", invoice.delivery_date],
-        [invoice.customer.address_lines[2], "", "Levert til:", invoice.delivery_address[0]],
-        [customer_org_no, "", "", invoice.delivery_address[1]],
-        [message, "", "", invoice.delivery_address[2]],
-        ["", "", "Fakturadato:", date],
-        ["", "", "Fakturanummer:", invoice.id],
-        ["", "", "Betalingsfrist:", due],
-    ]
+    website = company["webside"]
+    if website:
+        data += [
+            ["", "", "Org nr:", company['org. nr']],
+            [invoice.customer.name, "", "Tlf:", company['tlf']],
+            [invoice.customer.address_lines[0], "", "Epost:", company['epost']],
+            [invoice.customer.address_lines[1], "", "Web:", website],
+            [invoice.customer.address_lines[2], "", "Leveringsdato:", invoice.delivery_date],
+            [customer_org_no, "", "Levert til:", invoice.delivery_address[0]],
+            ["", "", "", invoice.delivery_address[1]],
+            [message, "", "", invoice.delivery_address[2]],
+            ["", "", "Fakturadato:", date],
+            ["", "", "Fakturanummer:", invoice.id],
+            ["", "", "Betalingsfrist:", due],
+        ]
+    else:
+        data += [
+            ["", "", "Org nr:", company['org. nr']],
+            [invoice.customer.name, "", "Tlf:", company['tlf']],
+            [invoice.customer.address_lines[0], "", "Epost:", company['epost']],
+            [invoice.customer.address_lines[1], "", "Leveringsdato:", invoice.delivery_date],
+            [invoice.customer.address_lines[2], "", "Levert til:", invoice.delivery_address[0]],
+            [customer_org_no, "", "", invoice.delivery_address[1]],
+            [message, "", "", invoice.delivery_address[2]],
+            ["", "", "Fakturadato:", date],
+            ["", "", "Fakturanummer:", invoice.id],
+            ["", "", "Betalingsfrist:", due],
+        ]
+
     addresses = Table(data, colWidths=[7*cm, 3*cm, 4*cm, 4*cm])
 
     # add styling to addressing fields
