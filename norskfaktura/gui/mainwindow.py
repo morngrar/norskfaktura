@@ -2,7 +2,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from norskfaktura.gui import CustomerView, MainView, InvoiceView
+from norskfaktura.gui import CustomerView, MainView, InvoiceView, ConfigView
 
 WINDOW_TITLE = "Norsk Faktura"
 
@@ -32,6 +32,7 @@ class MainWindow(Gtk.Window):
         self.main_view.connect("customer-chosen", self.on_customer_chosen)
         self.main_view.connect("invoice-chosen", self.on_invoice_chosen)
         self.main_view.connect("invoice-search", self.on_invoice_search)
+        self.main_view.connect("settings", self.on_settings_clicked)
 
         self.customer_view = CustomerView(self)
         self.stack.add_named(self.customer_view, "customer view")
@@ -42,6 +43,10 @@ class MainWindow(Gtk.Window):
         self.stack.add_named(self.invoice_view, "invoice view")
         self.invoice_view.connect("home-clicked", self.on_home_clicked)
 
+        self.config_view = ConfigView(self, back_enabled=True)
+        self.stack.add_named(self.config_view, "config view")
+        self.config_view.connect("home-clicked", self.on_home_clicked)
+
 
         vbox.pack_start(self.stack, True, True, 0)
 
@@ -50,6 +55,10 @@ class MainWindow(Gtk.Window):
         self.set_title("Ny kunde")
         self.customer_view.new_customer()
         self.stack.set_visible_child(self.customer_view)
+
+    def on_settings_clicked(self, *args):
+        self.set_title("Oppsett")
+        self.stack.set_visible_child(self.config_view)
 
     def on_customer_chosen(self, *args):
         customer = args[-1]

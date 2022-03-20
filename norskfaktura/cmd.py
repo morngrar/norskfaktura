@@ -16,8 +16,7 @@ def dev():
     cfg.config_file = "test.conf"
     cfg.load_config()
     common.ensure_db()
-    #show_main_window()
-    show_config_window()
+    show_main_window()
 
 def install_icons():
     """Installs icon and desktop file into local directory"""

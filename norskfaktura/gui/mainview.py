@@ -143,6 +143,15 @@ class MainView(Gtk.Box):
             self.invoice_search_button, False, False, 0
         )
 
+        # settings button
+        self.settings_button = Gtk.Button("Innstillinger")
+        signaling.new("settings", self)
+        self.settings_button.connect("clicked", self.on_settings_clicked)
+        invoice_search_pane.pack_end(
+            self.settings_button, False, False, 0
+        )
+
+
         # Filling treeviews
         self.refresh_customers()
         self.refresh_invoices()
@@ -205,3 +214,6 @@ class MainView(Gtk.Box):
 
     def on_invoice_search(self, *args):
         self.emit("invoice-search", self.invoice_search_entry.get_text())
+
+    def on_settings_clicked(self, *args):
+        self.emit("settings", None)

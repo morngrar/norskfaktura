@@ -12,19 +12,16 @@ class ConfigView(Gtk.Box):
     window or the configuration window.
     """
 
-    def __init__(self, window, *args, **kwargs):
+    def __init__(self, window, *args, back_enabled=False, **kwargs):
         super().__init__(*args, **kwargs)
         self.window = window
         self.set_orientation(Gtk.Orientation.VERTICAL)
-
-
 
         grid = Gtk.Grid()
         self.add(grid)
 
         horizontal_margin = 12
         vertical_margin = 12
-
 
         name_label = Gtk.Label("Navn: ")
         row = 0
@@ -67,7 +64,6 @@ class ConfigView(Gtk.Box):
         email_label.set_justify(Gtk.Justification.RIGHT)
         email_label.set_margin_left(horizontal_margin)
         email_label.set_margin_right(5)
-        #email_label.set_margin_top(top_margin)
         grid.attach(email_label, 0, row, 1, 1)
         self.email_entry = Gtk.Entry()
         self.email_entry.set_margin_top(top_margin)
@@ -172,7 +168,6 @@ class ConfigView(Gtk.Box):
         box.pack_start(self.logo_entry, True, True, 0)
         box.pack_start(self.browse_logo_button, True, True, 0)
 
-
         label = Gtk.Label("PDF-mappe: ")
         right_row += 1
         label.set_justify(Gtk.Justification.RIGHT)
@@ -193,33 +188,34 @@ class ConfigView(Gtk.Box):
         box.pack_start(self.pdf_entry, True, True, 0)
         box.pack_start(self.browse_pdf_button, True, True, 0)
 
-        
         # buttons
         save_button = Gtk.Button("Lagre")
         row += 1
         vert_spacer = 20
         save_button.set_margin_right(horizontal_margin)
-        #save_button.set_margin_left(horizontal_margin)
         save_button.set_margin_top(vert_spacer)
         save_button.set_margin_bottom(vertical_margin)
         save_button.connect("clicked", self.on_save_clicked)
         grid.attach(save_button, 7, row, 1, 1)
 
-        back_button = Gtk.Button("Tilbake")
-        back_button.set_margin_right(horizontal_margin*2)
-        back_button.set_margin_top(vert_spacer)
-        back_button.set_margin_bottom(vertical_margin)
-        grid.attach(back_button, 8, row, 1, 1)
+        self.back_button = Gtk.Button("Tilbake")
+        self.back_button.set_margin_right(horizontal_margin*2)
+        self.back_button.set_margin_top(vert_spacer)
+        self.back_button.set_margin_bottom(vertical_margin)
+        grid.attach(self.back_button, 8, row, 1, 1)
+        self.back_button.set_sensitive(back_enabled)
         
         # creating and attaching signal to go home
         signaling.new("home-clicked", self) # signal to get back
-        back_button.connect("clicked", self.on_back_clicked)
+        self.back_button.connect("clicked", self.on_back_clicked)
 
 
-    def on_save_clicked():
+
+    def on_save_clicked(*args):
         pass
-    def on_back_clicked():
-        pass
+
+    def on_back_clicked(self, widget):
+        self.emit("home-clicked", self)
 
 
 
