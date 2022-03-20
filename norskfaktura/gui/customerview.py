@@ -10,13 +10,18 @@ class CustomerView(Gtk.Box):
         super().__init__(*args, **kwargs)
         self.window = window
         self.customer = None
+        self.set_orientation(Gtk.Orientation.VERTICAL)
 
 
-        self.set_margin_left(50)
-        self.set_margin_top(150)
+
+        main_box = Gtk.Box()
+        main_box.set_hexpand(True)
+        main_box.set_vexpand(True)
+        self.pack_start(main_box, True, False, 0)
+
 
         grid = Gtk.Grid()
-        self.add(grid)
+        main_box.pack_start(grid, True, False, 0)
 
         horizontal_margin = 12
         vertical_margin = 12

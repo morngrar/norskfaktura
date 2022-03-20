@@ -16,9 +16,19 @@ class ConfigView(Gtk.Box):
         super().__init__(*args, **kwargs)
         self.window = window
         self.set_orientation(Gtk.Orientation.VERTICAL)
+        self.set_hexpand(True)
+        self.set_vexpand(True)
+
+        main_box = Gtk.Box()
+        main_box.set_hexpand(True)
+        main_box.set_vexpand(True)
+        self.pack_start(main_box, True, False, 0)
 
         grid = Gtk.Grid()
-        self.add(grid)
+        grid.set_hexpand(True)
+        grid.set_vexpand(True)
+        main_box.pack_start(grid, True, False, 0)
+
 
         horizontal_margin = 12
         vertical_margin = 12
