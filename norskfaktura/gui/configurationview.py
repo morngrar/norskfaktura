@@ -200,6 +200,7 @@ class ConfigView(Gtk.Box):
         self.browse_logo_button.set_margin_left(4)
         self.browse_logo_button.set_margin_right(horizontal_margin*2)
         self.browse_logo_button.set_margin_top(top_margin)
+        self.browse_logo_button.connect("clicked", self.on_logo_clicked)
         box.pack_start(self.logo_entry, True, True, 0)
         box.pack_start(self.browse_logo_button, True, True, 0)
 
@@ -220,6 +221,7 @@ class ConfigView(Gtk.Box):
         self.browse_pdf_button.set_margin_left(4)
         self.browse_pdf_button.set_margin_right(horizontal_margin*2)
         self.browse_pdf_button.set_margin_top(top_margin)
+        self.browse_pdf_button.connect("clicked", self.on_pdf_clicked)
         box.pack_start(self.pdf_entry, True, True, 0)
         box.pack_start(self.browse_pdf_button, True, True, 0)
 
@@ -233,7 +235,7 @@ class ConfigView(Gtk.Box):
         save_button.connect("clicked", self.on_save_clicked)
         grid.attach(save_button, 7, row, 1, 1)
 
-        self.back_button = Gtk.Button("Tilbake")
+        self.back_button = Gtk.Button("Avbryt")
         self.back_button.set_margin_right(horizontal_margin*2)
         self.back_button.set_margin_top(vert_spacer)
         self.back_button.set_margin_bottom(vertical_margin)
@@ -305,15 +307,58 @@ class ConfigView(Gtk.Box):
 
 
 
-    # templates for handlers
+    def on_logo_clicked(self, *args):
 
-    def clear_search(self):
-        self.customer_search_entry.set_text("")
-        self.invoice_search_entry.set_text("")
-        self.refresh_customers()
-        self.refresh_invoices()
+        dialog = Gtk.FileChooserDialog(
+            title="Velg en bildefil av logoen for fakturaene", 
+            parent=self.window, 
+            action=Gtk.FileChooserAction.OPEN,
+        )
+        dialog.add_buttons(
+            Gtk.STOCK_CANCEL,
+            Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OPEN,
+            Gtk.ResponseType.OK,
+        )
+
+        f = Gtk.FileFilter()
+        f.set_name("PNG filer")
+        f.add_mime_type("image/png")
+        dialog.add_filter(f)
+
+        f = Gtk.FileFilter()
+        f.set_name("JPEG filer")
+        f.add_mime_type("image/jpg")
+        dialog.add_filter(f)
+
+        f = Gtk.FileFilter()
+        f.set_name("GIF filer")
+        f.add_mime_type("image/gif")
+        dialog.add_filter(f)
+
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            self.logo_entry.set_text(dialog.get_filename())
+
+        dialog.destroy()
 
 
+    def on_pdf_clicked(self, *args):
+        dialog = Gtk.FileChooserDialog(
+            title="Velg en mappe hvor genererte PDFer skal legges",
+            parent=self.window,
+            action=Gtk.FileChooserAction.SELECT_FOLDER,
+        )
+        dialog.add_buttons(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Velg", Gtk.ResponseType.OK
+        )
+        dialog.set_default_size(800, 400)
+
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            self.pdf_entry.set_text(dialog.get_filename())
+
+        dialog.destroy()
 
 
 
