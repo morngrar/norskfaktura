@@ -58,7 +58,7 @@ Foruten første fakturanummer og filstiene til pdf-mappen og logoen, så skriver
 
 
 ## Lage og bruke et virtuelt miljø for utvikling:
-**Merk: det er per nå ikke mulig å utvikle programmet fra innsiden av et virtuelt miljø på en enkel måte, se #10
+**Merk: det er per nå ikke mulig å utvikle programmet fra innsiden av et virtuelt miljø på en enkel måte, se #10**
 
 Lager et virtuelt mmiljø under mappen 'env':
 
