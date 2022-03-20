@@ -52,11 +52,12 @@ Man kan installere eventuelle oppdateringer også v.h.a pip:
 
 
 ### Konfigurering
-For øyeblikket er konfigurering gjort via en tekstfil `~/.config/norskfaktura/norskfaktura.conf`, men hvis denne ikke eksisterer ved oppstart, vil den lages og åpnes i Gnomes teksteditor av programmet selv. Skriv inn aktuell informasjon, lagre og lukk, Norsk Faktura starter etterpå.
-
+Når du starter applikasjonen for første gang vil du få opp et vindu for å legge inn informasjon om ditt firma/organisasjon. Om du oppdager at du har gjort noe feil, eller vil gjøre endringer senere, kan du komme tilbake til denne skjermen ved å klikke på "instillinger"-knappen nede i høyre hjørne av hovedbildet.
 
 
 ## Lage og bruke et virtuelt miljø for utvikling:
+**Merk: det er per nå ikke mulig å utvikle programmet fra innsiden av et virtuelt miljø på en enkel måte, se #10
+
 Lager et virtuelt mmiljø under mappen 'env':
 
     python -m venv env
