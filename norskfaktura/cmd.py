@@ -11,11 +11,13 @@ from norskfaktura.common import HOST_DIR
 def dev():
     """Run against development db"""
     from norskfaktura import common
+    from norskfaktura.gui import show_config_window
     common.DBFILE = "test.db"
     cfg.config_file = "test.conf"
     cfg.load_config()
     common.ensure_db()
-    show_main_window()
+    #show_main_window()
+    show_config_window()
 
 def install_icons():
     """Installs icon and desktop file into local directory"""
