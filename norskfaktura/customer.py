@@ -20,6 +20,9 @@ class Customer:
         self.email = None
         self.discount = None
 
+    def __str__(self):
+        return f"Customer(\n id: {self.id}\n name: {self.name}\n org: {self.org_no}\n address: {self.address_lines})"
+
     def address_oneliner(self):
         tmp = ""
         if self.address_lines[0]:
@@ -117,7 +120,7 @@ def search_customers(search_string):
 
     return customer_list
 
-def get_customer_by_id(id):
+def get_customer_by_id(_id):
     conn = sqlite3.connect(common.DBFILE)
     conn.row_factory = sqlite3.Row
     c = conn.cursor()
@@ -128,7 +131,7 @@ def get_customer_by_id(id):
         FROM customers
         WHERE id = ?
         """,
-        (id,)
+        (_id,)
     )
 
     result = c.fetchone()

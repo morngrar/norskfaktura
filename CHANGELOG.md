@@ -1,5 +1,8 @@
 # Endringslogg
 
+## v0.2.1
+- Fikset en bug som gjorde at mottakers adresse ble overskrevet av leveringsadresse
+
 ## v0.2.0
 - Konfigurering av programmet gjøres nå grafisk, og det er lagt til en knapp på hovedvinduet som gir en tilgang til å endre på ting etter førstegangsbruk.
 - Kundeskjermen har nå blitt responsiv dersom man endrer størrelsen på vinduet.

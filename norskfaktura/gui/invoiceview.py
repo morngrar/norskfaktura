@@ -40,12 +40,12 @@ class InvoiceView(Gtk.Box):
         self.pack_start(customer_box, True, True, 0)
 
         self.customer_info_labels = {
-            "name" : Gtk.Label("Customer name"),
-            "org" : Gtk.Label("Org. no: xxx xxx xxx"),
+            "name" : Gtk.Label(""),
+            "org" : Gtk.Label(""),
             "addr" : [
-                Gtk.Label("Blåklokkevegen 26"),
                 Gtk.Label(""),
-                Gtk.Label("2322 RIDABU"),
+                Gtk.Label(""),
+                Gtk.Label(""),
             ]
         }
 
@@ -259,7 +259,7 @@ class InvoiceView(Gtk.Box):
         self.invoice = invoice
         self._refresh_rows()
         self._blank_item_input()
-        if invoice.message:
+        if self.invoice.message:
             self.message_entry.set_text(self.invoice.message)
         else:
             self.message_entry.set_text("")
@@ -272,10 +272,11 @@ class InvoiceView(Gtk.Box):
         for i in range(3):
             self.delivery_address_fields[i].set_text(self.invoice.delivery_address[i])
         self._write_protect(True)
-        self.customer_info_labels["name"].set_text(invoice.customer.name)
-        self.customer_info_labels["org"].set_text(invoice.customer.org_no)
+        self.customer_info_labels["name"].set_text(self.invoice.customer.name)
+        self.customer_info_labels["org"].set_text(self.invoice.customer.org_no)
         for i in range(3):
-            self.customer_info_labels["addr"][i].set_text(invoice.customer.address_lines[i])
+            addr_line = self.invoice.customer.address_lines[i]
+            self.customer_info_labels["addr"][i].set_text(addr_line)
         self.invoice.calculate_sums()
         vat, balance, total = self.invoice.get_totals()
 
@@ -283,7 +284,7 @@ class InvoiceView(Gtk.Box):
         self.total_value.set_markup(f"<b>{total}</b>")
         self.customer_balance_entry.set_text(balance)
         self.due_days_entry.set_text(
-            str((invoice.due - invoice.date).days)
+            str((self.invoice.due - self.invoice.date).days)
         )
         self._set_button_sensitivity()
         

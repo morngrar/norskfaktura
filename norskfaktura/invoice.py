@@ -5,6 +5,8 @@ from datetime import date, timedelta
 from norskfaktura.customer import Customer
 from norskfaktura import common
 
+import copy
+
 # invoice flags
 PAID = 1<<0
 POSTED = 1<<1
@@ -17,7 +19,7 @@ class Invoice:
         self.customer = customer
 
         self.delivery_date = date.today().strftime("%d.%m.%Y")
-        self.delivery_address = self.customer.address_lines
+        self.delivery_address = copy.copy(self.customer.address_lines)
         
         self.date = date.today()
         self.due = None
@@ -285,7 +287,8 @@ def get_invoice_by_id(id):
     result = c.fetchone()
 
 
-    invoice = Invoice(get_customer_by_id(result['customer']))
+    customer = get_customer_by_id(result['customer'])
+    invoice = Invoice(customer)
     invoice.id = result['id']
     invoice.delivery_date = result['delivery_date']
     invoice.delivery_address[0] = result['delivery_address_one']
