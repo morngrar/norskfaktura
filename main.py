@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 """ cmd.py
 
 Contains functions that turns into scripts for the user if the
@@ -37,3 +39,6 @@ def install_icons():
 def main():
     cfg.load_config()
     show_main_window()
+
+if __name__=="__main__":
+    dev()
