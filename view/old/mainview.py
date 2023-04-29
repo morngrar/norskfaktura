@@ -1,6 +1,6 @@
-from norskfaktura.invoice import Invoice, get_invoice_by_id, get_due_invoices
-from norskfaktura.customer import Customer, search_customers
-from norskfaktura.gui import signaling
+from model.invoice import Invoice, get_invoice_by_id, get_due_invoices
+from model.customer import Customer, search_customers
+from view.old import signaling
 from gi.repository import Gtk, GObject
 import gi
 gi.require_version("Gtk", "3.0")

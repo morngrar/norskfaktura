@@ -1,4 +1,4 @@
-from norskfaktura.gui import signaling
+from view.old import signaling
 from gi.repository import Gtk, GObject
 import gi
 gi.require_version("Gtk", "3.0")
@@ -254,7 +254,7 @@ class ConfigView(Gtk.Box):
 
 
     def on_save_clicked(self, *args):
-        from norskfaktura.config import config, write_config
+        from util.config import config, write_config
         config["firma"]["navn"] = self.name_entry.get_text()
         config["firma"]["org. nr"] = self.org_entry.get_text()
         config["firma"]["tlf"] = self.phone_entry.get_text()
@@ -283,7 +283,7 @@ class ConfigView(Gtk.Box):
         self.emit("home-clicked", self)
 
     def load_data(self):
-        from norskfaktura.config import load_config
+        from util.config import load_config
 
         cfg = load_config()
         self.name_entry.set_text(cfg["firma"]["navn"])

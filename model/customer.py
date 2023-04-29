@@ -1,7 +1,7 @@
 
 import sqlite3
 
-from norskfaktura import common
+from util import common
 
 class Customer:
     def __init__(self):

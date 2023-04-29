@@ -2,8 +2,8 @@
 import sqlite3
 from datetime import date, timedelta
 
-from norskfaktura.customer import Customer
-from norskfaktura import common
+from model.customer import Customer
+from util import common
 
 import copy
 
@@ -139,7 +139,7 @@ class Invoice:
             )
             empty = c.fetchone()[0]
             if empty:
-                from norskfaktura import config
+                from util import config
                 self.id = config.load_config()['firma']['første fakturanr']
 
             # SELECT id
@@ -267,10 +267,10 @@ class CreditNote(Invoice):
         self.invoice.save()
 
 
-from norskfaktura.customer import get_customer_by_id
+from model.customer import get_customer_by_id
 
 def get_invoice_by_id(id):
-    from norskfaktura.customer import get_customer_by_id
+    from model.customer import get_customer_by_id
     conn = sqlite3.connect(common.DBFILE)
     conn.row_factory = sqlite3.Row
     c = conn.cursor()
@@ -294,7 +294,7 @@ def get_invoice_by_id(id):
     invoice.delivery_address[0] = result['delivery_address_one']
     invoice.delivery_address[1] = result['delivery_address_two']
     invoice.delivery_address[2] = result['delivery_postal_code']
-    from norskfaktura import compat
+    from util import compat
     invoice.date = compat.date_from_iso_string(result['date']) #date.fromisoformat(result['date'])
     invoice.due = compat.date_from_iso_string(result['due']) #date.fromisoformat(result['due'])
     invoice.message = result['message']

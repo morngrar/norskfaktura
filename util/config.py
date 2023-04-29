@@ -45,7 +45,7 @@ def load_config():
     if not os.path.exists(config_file):
         ensure_config_dir()
         create_config()
-        from norskfaktura.gui import show_config_window
+        from view.old.configwindow import show_config_window
         show_config_window()
 
     else:

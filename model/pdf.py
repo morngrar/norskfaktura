@@ -9,9 +9,9 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 import os
 
-from norskfaktura import common
-from norskfaktura.config import load_config
-from norskfaktura import invoice as inv
+from util import common
+from util.config import load_config
+from model import invoice as inv
 
 
 
@@ -25,7 +25,7 @@ def create_pdf(invoice):
     company = config['firma']
 
     # Load fonts
-    font_dir = os.path.join(common.HOST_DIR, "fonts")
+    font_dir = os.path.join(common.HOST_DIR, "assets", "fonts")
     pdfmetrics.registerFont(TTFont("Courier Prime Bold", os.path.join(font_dir, "courier_prime/Courier Prime Bold.ttf")))
     pdfmetrics.registerFont(TTFont("Courier Prime Regular", os.path.join(font_dir, "courier_prime/Courier Prime.ttf")))
     pdfmetrics.registerFont(TTFont("Clear Sans Regular", os.path.join(font_dir, "clear_sans/ClearSans-Regular.ttf")))

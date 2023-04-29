@@ -6,13 +6,13 @@ Contains common functionality across the app. Utility functions and globals.
 
 import os
 
-HOST_DIR = os.path.dirname(os.path.abspath(__file__))
+HOST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 
 # Production:
 DBFILE = os.path.expanduser("~/.config/norskfaktura/norskfaktura.db")
 
-from norskfaktura.sqlloader import load_sql_file
-from norskfaktura.config import ensure_config_dir
+from model.sqlloader import load_sql_file
+from util.config import ensure_config_dir
 
 def ensure_db():
     ensure_config_dir()

@@ -6,15 +6,15 @@ Contains functions that turns into scripts for the user if the
 app is installed via pip.
 """
 
-import norskfaktura.config as cfg
-from norskfaktura.gui.legacy import show_main_window
-from norskfaktura import common
-from norskfaktura.common import HOST_DIR
+import util.config as cfg
+from view.legacy import show_main_window
+from util import common
+from util.common import HOST_DIR
 
 def dev():
     """Run against development db"""
-    common.DBFILE = "./test.db"
-    cfg.config_file = "./test.conf"
+    common.DBFILE = "./testing/test.db"
+    cfg.config_file = "./testing/test.conf"
     cfg.load_config()
     common.ensure_db()
     show_main_window()

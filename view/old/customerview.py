@@ -2,8 +2,8 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from norskfaktura.customer import Customer
-from norskfaktura.gui import signaling
+from model.customer import Customer
+from view.old import signaling
 
 class CustomerView(Gtk.Box):
     def __init__(self, window, *args, **kwargs):

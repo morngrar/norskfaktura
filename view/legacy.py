@@ -2,7 +2,10 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from norskfaktura.gui.old import CustomerView, MainView, InvoiceView, ConfigView
+from view.old.customerview import CustomerView
+from view.old.mainview import MainView
+from view.old.invoiceview import InvoiceView
+from view.old.configurationview import ConfigView
 
 WINDOW_TITLE = "Norsk Faktura"
 
@@ -84,7 +87,7 @@ class MainWindow(Gtk.Window):
         self.stack.set_visible_child(self.invoice_view)
 
     def on_invoice_search(self, *args):
-        from norskfaktura.invoice import get_invoice_by_id
+        from model.invoice import get_invoice_by_id
         invoice = get_invoice_by_id(int(args[-1]))
         if invoice:
             self.set_title(f"Faktura nr {invoice.id}")

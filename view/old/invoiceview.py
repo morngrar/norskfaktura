@@ -3,10 +3,10 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from norskfaktura.gui import signaling
-from norskfaktura import invoice as inv
-from norskfaktura.config import load_config
-from norskfaktura.common import pad_zeroes
+from view.old import signaling
+from model import invoice as inv
+from util.config import load_config
+from util.common import pad_zeroes
 
 class InvoiceView(Gtk.Box):
     def __init__(self, window, *args, **kwargs):
@@ -310,7 +310,7 @@ class InvoiceView(Gtk.Box):
         self._set_button_sensitivity()
 
     def on_pdf_clicked(self, widget):
-        from norskfaktura.pdf import create_pdf
+        from model.pdf import create_pdf
         create_pdf(self.invoice)
 
     def on_creditnote_clicked(self, widget):
