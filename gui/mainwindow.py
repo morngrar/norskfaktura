@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtWidgets import (
     QApplication,
@@ -13,15 +12,23 @@ from PySide2.QtGui import QPalette, QColor
 
 from PySide2.QtUiTools import QUiLoader
 
+WINDOW_TITLE = "Norsk Faktura"
 
-from generated import mainframe
+
+if __name__=="__main__": # fix local import path when running *this* file
+    from generated import mainframe
+else:
+    from gui.generated import mainframe
 class MainView(QWidget, mainframe.Ui_Form):
     def __init__(self):
         super(MainView, self).__init__()
         self.setupUi(self)
 
 
-from generated import customerframe
+if __name__=="__main__": # fix local import path when running *this* file
+    from generated import customerframe
+else:
+    from gui.generated import customerframe
 class CustomerView(QWidget, customerframe.Ui_Form):
     def __init__(self, mainwindow):
         super(CustomerView, self).__init__()
@@ -33,7 +40,10 @@ class CustomerView(QWidget, customerframe.Ui_Form):
     def on_back_clicked(self):
         self.parent.to_main_view()
 
-from generated import settingsframe
+if __name__=="__main__": # fix local import path when running *this* file
+    from generated import settingsframe
+else:
+    from gui.generated import settingsframe
 class SettingsView(QWidget, settingsframe.Ui_Form):
     def __init__(self, mainwindow):
         super(SettingsView, self).__init__()
@@ -45,7 +55,10 @@ class SettingsView(QWidget, settingsframe.Ui_Form):
     def on_cancel_clicked(self):
         self.parent.to_main_view()
 
-from generated import invoiceframe
+if __name__=="__main__": # fix local import path when running *this* file
+    from generated import invoiceframe
+else:
+    from gui.generated import invoiceframe
 class InvoiceView(QWidget, invoiceframe.Ui_Form):
     def __init__(self, mainwindow):
         super(InvoiceView, self).__init__()
@@ -57,11 +70,22 @@ class InvoiceView(QWidget, invoiceframe.Ui_Form):
     def on_cancel_clicked(self):
         self.parent.to_main_view()
 
+
+# MAIN CONTROLLER
+
 class MainWindow(QMainWindow):
+    """Main window of the application.
+
+    This is the window which holds most of the applications 'views', which
+    are simply boxes which contain widgets and layouts and functionality.
+    The main window remains the same, and the child views are switched out
+    as the user navigates between them.
+    """
+
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("My App")
+        self.setWindowTitle(WINDOW_TITLE)
 
         self.layout = QStackedLayout()
 

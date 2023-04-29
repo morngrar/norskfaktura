@@ -2,7 +2,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from norskfaktura.gui import CustomerView, MainView, InvoiceView, ConfigView
+from norskfaktura.gui.old import CustomerView, MainView, InvoiceView, ConfigView
 
 WINDOW_TITLE = "Norsk Faktura"
 

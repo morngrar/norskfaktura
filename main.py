@@ -7,14 +7,14 @@ app is installed via pip.
 """
 
 import norskfaktura.config as cfg
-from norskfaktura.gui import show_main_window
+from norskfaktura.gui.legacy import show_main_window
+from norskfaktura import common
 from norskfaktura.common import HOST_DIR
 
 def dev():
     """Run against development db"""
-    from norskfaktura import common
-    common.DBFILE = "test.db"
-    cfg.config_file = "test.conf"
+    common.DBFILE = "./test.db"
+    cfg.config_file = "./test.conf"
     cfg.load_config()
     common.ensure_db()
     show_main_window()
@@ -42,3 +42,5 @@ def main():
 
 if __name__=="__main__":
     dev()
+#    from gui import mainwindow
+#    mainwindow.show_main_window()
