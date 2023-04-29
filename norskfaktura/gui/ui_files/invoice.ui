@@ -25,7 +25,7 @@
         <number>225</number>
        </property>
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="nameLabel">
          <property name="font">
           <font>
            <pointsize>14</pointsize>
@@ -37,7 +37,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="orgNoLabel">
          <property name="font">
           <font>
            <pointsize>14</pointsize>
@@ -49,7 +49,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="addressLabel1">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -61,7 +61,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="addressLabel2">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -73,7 +73,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="addressLabel3">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -126,7 +126,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="deliveryDateEdit">
               <property name="readOnly">
                <bool>true</bool>
               </property>
@@ -145,13 +145,13 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2"/>
+             <widget class="QLineEdit" name="deliveryAddressEdit1"/>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_3"/>
+             <widget class="QLineEdit" name="deliveryAddressEdit2"/>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_4"/>
+             <widget class="QLineEdit" name="deliveryAddressEdit3"/>
             </item>
            </layout>
           </item>
@@ -192,7 +192,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_5"/>
+      <widget class="QLineEdit" name="messageEdit"/>
      </item>
     </layout>
    </item>
@@ -201,7 +201,7 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <widget class="QTreeView" name="treeView"/>
+        <widget class="QTreeView" name="rowView"/>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
@@ -230,7 +230,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_6"/>
+              <widget class="QLineEdit" name="daysToDueEdit"/>
              </item>
             </layout>
            </item>
@@ -257,7 +257,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_7"/>
+              <widget class="QLineEdit" name="alreadyPaidByCustomerEdit"/>
              </item>
             </layout>
            </item>
@@ -288,7 +288,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_11">
+              <widget class="QLabel" name="vatLabel">
                <property name="text">
                 <string>0,00</string>
                </property>
@@ -315,7 +315,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_13">
+              <widget class="QLabel" name="totalLabel">
                <property name="font">
                 <font>
                  <weight>75</weight>
@@ -348,7 +348,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_8">
+            <widget class="QLineEdit" name="descriptionEdit">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>250</horstretch>
@@ -369,7 +369,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_9">
+            <widget class="QLineEdit" name="priceEdit">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>20</horstretch>
@@ -390,7 +390,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_10">
+            <widget class="QLineEdit" name="amountEdit">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>20</horstretch>
@@ -411,7 +411,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_11">
+            <widget class="QLineEdit" name="discountPercentageEdit">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>20</horstretch>
@@ -444,7 +444,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_12">
+            <widget class="QLineEdit" name="vatPercentageEdit">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>20</horstretch>
@@ -468,7 +468,7 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,0,0,0,0,0,0">
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="postButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -486,7 +486,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="payButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -504,7 +504,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="createPDFButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -522,7 +522,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="createCreditNoteButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -540,7 +540,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="cancelButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -574,7 +574,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_6">
+        <widget class="QPushButton" name="removeRowButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -592,7 +592,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_7">
+        <widget class="QPushButton" name="addRowButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>

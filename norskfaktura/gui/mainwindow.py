@@ -1,98 +1,117 @@
-import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+#!/usr/bin/python
 
-from norskfaktura.gui import CustomerView, MainView, InvoiceView, ConfigView
 
-WINDOW_TITLE = "Norsk Faktura"
+from PySide2 import QtCore, QtGui, QtWidgets
+from PySide2.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QPushButton,
+    QStackedLayout,
+    QWidget,
+)
+from PySide2.QtGui import QPalette, QColor
 
-class MainWindow(Gtk.Window):
-    """Main window of the application.
+from PySide2.QtUiTools import QUiLoader
 
-    This is the window which holds most of the applications 'views', which
-    are simply boxes which contain widgets and layouts and functionality.
-    The OS window remains the same, and the child views are switched aout
-    as the user navigates between them.
-    """
 
+from generated import mainframe
+class MainView(QWidget, mainframe.Ui_Form):
     def __init__(self):
-        Gtk.Window.__init__(self, title=WINDOW_TITLE)
-        self.set_border_width(10)
-
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        self.add(vbox)
-
-        self.stack = Gtk.Stack()
-        self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
-        self.stack.set_transition_duration(100)
-
-        self.main_view = MainView(self)
-        self.stack.add_named(self.main_view, "main view")
-        self.main_view.connect("new-customer-clicked", self.on_new_customer_clicked)
-        self.main_view.connect("customer-chosen", self.on_customer_chosen)
-        self.main_view.connect("invoice-chosen", self.on_invoice_chosen)
-        self.main_view.connect("invoice-search", self.on_invoice_search)
-        self.main_view.connect("settings", self.on_settings_clicked)
-
-        self.customer_view = CustomerView(self)
-        self.stack.add_named(self.customer_view, "customer view")
-        self.customer_view.connect("home-clicked", self.on_home_clicked)
-        self.customer_view.connect("new-invoice", self.on_new_invoice)
-
-        self.invoice_view = InvoiceView(self)
-        self.stack.add_named(self.invoice_view, "invoice view")
-        self.invoice_view.connect("home-clicked", self.on_home_clicked)
-
-        self.config_view = ConfigView(self, back_enabled=True)
-        self.stack.add_named(self.config_view, "config view")
-        self.config_view.connect("home-clicked", self.on_home_clicked)
+        super(MainView, self).__init__()
+        self.setupUi(self)
 
 
-        vbox.pack_start(self.stack, True, True, 0)
+from generated import customerframe
+class CustomerView(QWidget, customerframe.Ui_Form):
+    def __init__(self, mainwindow):
+        super(CustomerView, self).__init__()
+        self.setupUi(self)
+        self.parent = mainwindow
+
+        self.backButton.clicked.connect(self.on_back_clicked)
+
+    def on_back_clicked(self):
+        self.parent.to_main_view()
+
+from generated import settingsframe
+class SettingsView(QWidget, settingsframe.Ui_Form):
+    def __init__(self, mainwindow):
+        super(SettingsView, self).__init__()
+        self.setupUi(self)
+        self.parent = mainwindow
+
+        self.cancelButton.clicked.connect(self.on_cancel_clicked)
+
+    def on_cancel_clicked(self):
+        self.parent.to_main_view()
+
+from generated import invoiceframe
+class InvoiceView(QWidget, invoiceframe.Ui_Form):
+    def __init__(self, mainwindow):
+        super(InvoiceView, self).__init__()
+        self.setupUi(self)
+        self.parent = mainwindow
+
+        self.cancelButton.clicked.connect(self.on_cancel_clicked)
+
+    def on_cancel_clicked(self):
+        self.parent.to_main_view()
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("My App")
+
+        self.layout = QStackedLayout()
+
+        self.mainView = MainView()
+        self.layout.addWidget(self.mainView)
+
+        self.customerView = CustomerView(self)
+        self.layout.addWidget(self.customerView)
+
+        self.settingsView = SettingsView(self)
+        self.layout.addWidget(self.settingsView)
+
+        self.invoiceView = InvoiceView(self)
+        self.layout.addWidget(self.invoiceView)
+
+        self.layout.setCurrentIndex(0)
+
+        widget = QWidget()
+        widget.setLayout(self.layout)
+        self.setCentralWidget(widget)
 
 
-    def on_new_customer_clicked(self, *args):
-        self.set_title("Ny kunde")
-        self.customer_view.new_customer()
-        self.stack.set_visible_child(self.customer_view)
+        # main window signals
+        self.mainView.newCustomerButton.clicked.connect(self.to_customer_view)
+        self.mainView.settingsButton.clicked.connect(self.to_settings_view)
 
-    def on_settings_clicked(self, *args):
-        self.set_title("Oppsett")
-        self.stack.set_visible_child(self.config_view)
+        # temporary
+        self.mainView.searchInvoiceButton.clicked.connect(self.to_invoice_view)
 
-    def on_customer_chosen(self, *args):
-        customer = args[-1]
-        self.set_title(f"Kunde - {customer.name}")
-        self.customer_view.set_customer(customer)
-        self.stack.set_visible_child(self.customer_view)
 
-    def on_invoice_chosen(self, *args):
-        invoice = args[-1]
-        self.set_title(f"Faktura nr {invoice.id}")
-        self.invoice_view.set_invoice(invoice)
-        self.stack.set_visible_child(self.invoice_view)
+    def to_main_view(self):
+        self.layout.setCurrentIndex(0)
 
-    def on_home_clicked(self, *args):
-        self.main_view.clear_search()
-        self.stack.set_visible_child(self.main_view)
-        self.set_title(WINDOW_TITLE)
+    def to_customer_view(self):
+        self.layout.setCurrentIndex(1)
 
-    def on_new_invoice(self, *args):
-        self.set_title("Ny faktura")
-        self.invoice_view.new_invoice(args[-1])
+    def to_settings_view(self):
+        self.layout.setCurrentIndex(2)
 
-        self.stack.set_visible_child(self.invoice_view)
-
-    def on_invoice_search(self, *args):
-        from norskfaktura.invoice import get_invoice_by_id
-        invoice = get_invoice_by_id(int(args[-1]))
-        if invoice:
-            self.set_title(f"Faktura nr {invoice.id}")
-            self.invoice_view.set_invoice(invoice)
-            self.stack.set_visible_child(self.invoice_view)
+    def to_invoice_view(self):
+        self.layout.setCurrentIndex(3)
 
 def show_main_window():
-    win = MainWindow()
-    win.connect("destroy", Gtk.main_quit)
-    win.show_all()
-    Gtk.main()
+    import sys
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    app.exec_()
+
+if __name__=="__main__":
+    show_main_window()
+
+

@@ -144,28 +144,28 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QLineEdit" name="lineEdit_4"/>
+            <widget class="QLineEdit" name="nameEdit"/>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_8"/>
+            <widget class="QLineEdit" name="orgNoEdit"/>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_7"/>
+            <widget class="QLineEdit" name="phoneEdit"/>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_6"/>
+            <widget class="QLineEdit" name="emailEdit"/>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_5"/>
+            <widget class="QLineEdit" name="websideEdit"/>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_3"/>
+            <widget class="QLineEdit" name="addressEdit1"/>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_2"/>
+            <widget class="QLineEdit" name="addressEdit2"/>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit"/>
+            <widget class="QLineEdit" name="addressEdit3"/>
            </item>
           </layout>
          </item>
@@ -187,7 +187,7 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QCheckBox" name="checkBox">
+            <widget class="QCheckBox" name="vatRegisteredCheckBox">
              <property name="text">
               <string/>
              </property>
@@ -261,7 +261,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="lineEdit_10"/>
+            <widget class="QLineEdit" name="dueInDaysEdit"/>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="label_4">
@@ -276,13 +276,13 @@
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QLineEdit" name="lineEdit_11"/>
+            <widget class="QLineEdit" name="firstInvoiceNoEdit"/>
            </item>
            <item row="5" column="1" colspan="2">
-            <widget class="QLineEdit" name="lineEdit_12"/>
+            <widget class="QLineEdit" name="logoPathEdit"/>
            </item>
            <item row="5" column="3">
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="logoOpenButton">
              <property name="font">
               <font>
                <pointsize>10</pointsize>
@@ -294,7 +294,7 @@
             </widget>
            </item>
            <item row="6" column="3">
-            <widget class="QPushButton" name="pushButton_4">
+            <widget class="QPushButton" name="pdfOpenButton">
              <property name="font">
               <font>
                <pointsize>10</pointsize>
@@ -306,10 +306,10 @@
             </widget>
            </item>
            <item row="6" column="1" colspan="2">
-            <widget class="QLineEdit" name="lineEdit_13"/>
+            <widget class="QLineEdit" name="pdfDirEdit"/>
            </item>
            <item row="0" column="1" colspan="3">
-            <widget class="QLineEdit" name="lineEdit_9"/>
+            <widget class="QLineEdit" name="accountNoEdit"/>
            </item>
           </layout>
          </item>
@@ -334,7 +334,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="saveButton">
            <property name="font">
             <font>
              <pointsize>11</pointsize>
@@ -346,7 +346,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="cancelButton">
            <property name="font">
             <font>
              <pointsize>11</pointsize>

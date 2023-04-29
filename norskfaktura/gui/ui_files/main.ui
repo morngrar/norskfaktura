@@ -17,14 +17,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="nameEdit">
        <property name="placeholderText">
         <string>Navn på kunde</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="searchCustomerButton">
        <property name="font">
         <font>
          <pointsize>11</pointsize>
@@ -49,7 +49,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="newCustomerButton">
        <property name="font">
         <font>
          <pointsize>11</pointsize>
@@ -91,7 +91,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QTreeView" name="treeView"/>
+    <widget class="QTreeView" name="customerView"/>
    </item>
    <item>
     <spacer name="verticalSpacer">
@@ -122,7 +122,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QTreeView" name="treeView_2"/>
+    <widget class="QTreeView" name="outstandingInvoicesView"/>
    </item>
    <item>
     <spacer name="verticalSpacer_3">
@@ -155,14 +155,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLineEdit" name="lineEdit_2">
+      <widget class="QLineEdit" name="invoiceNoEdit">
        <property name="placeholderText">
         <string>Fakturanummer</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="searchInvoiceButton">
        <property name="font">
         <font>
          <pointsize>11</pointsize>
@@ -187,7 +187,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="settingsButton">
        <property name="font">
         <font>
          <pointsize>11</pointsize>

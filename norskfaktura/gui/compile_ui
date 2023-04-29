@@ -1,0 +1,6 @@
+#!/usr/bin/sh
+
+uic-qt5 -o generated/customerframe.py  -g python ui_files/customer.ui
+uic-qt5 -o generated/invoiceframe.py  -g python ui_files/invoice.ui
+uic-qt5 -o generated/mainframe.py  -g python ui_files/main.ui
+uic-qt5 -o generated/settingsframe.py  -g python ui_files/settings.ui
